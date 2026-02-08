@@ -37,6 +37,7 @@ class AdventureGame:
         - current_location_id: the ID of the location the game is currently in
         - inventory: inventory of the player
         - score: score the player has accumulated
+        - moves: amount of moves the player has done
         - ongoing: whether the game is still ongoing
     Representation Invariants:
         - # TODO add any appropriate representation invariants as needed
@@ -52,6 +53,7 @@ class AdventureGame:
     current_location_id: int  # Suggested attribute, can be removed
     inventory: list[Item]
     score: int
+    moves: int
     ongoing: bool  # Suggested attribute, can be removed
 
     def __init__(self, game_data_file: str, initial_location_id: int) -> None:
@@ -75,6 +77,7 @@ class AdventureGame:
         self._locations, self._items = self._load_game_data(game_data_file)
         self.inventory = []
         self.score = 0
+        self.moves = 0
         # Suggested attributes (you can remove and track these differently if you wish to do so):
         self.current_location_id = initial_location_id  # game begins at this location
         self.ongoing = True  # whether the game is ongoing
@@ -123,7 +126,7 @@ class AdventureGame:
             return item_name in location.items
         elif choice.startswith("deposit "):
             item_name = choice[8:0]  # slice "deposit " off choice to get the item's name
-            return any(itm.name == item_name for itm in self.inventory)
+            return any(itm.name == item_name and itm.target_position == location.id_num for itm in self.inventory)
         return False
 
     def take_item(self, loc_id: int, item_name: str) -> bool:
@@ -157,6 +160,8 @@ if __name__ == "__main__":
     #     'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
     # })
 
+    DORM = 1
+    MAX_MOVE = 30
     game_log = EventList()  # This is REQUIRED as one of the baseline requirements
     game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
     menu = ["look", "inventory", "score", "log", "quit"]  # Regular menu options available at each location
@@ -223,18 +228,34 @@ if __name__ == "__main__":
             else:
                 game.ongoing = False
 
-        else:
+        elif choice in location.available_commands:  # action that the location
+            # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
             # Handle non-menu actions
             result = location.available_commands[choice]
             game.current_location_id = result
+            game.moves += 1  # Go[direction] takes 1 move
 
+        else:  # action that do not change the location
             # TODO: Add in code to deal with actions which do not change the location (e.g. taking or using an item)
             if choice.startswith("take "):
-            # TODO: add item to inventory and updates the location items and command
-
+                # TODO: add item to inventory and updates the location items and command
+                item_name = choice[5:0]
+                if game.take_item(location.id_num, item_name):
+                    game.moves += 1
             elif choice.startswith("deposit "):
+                item_name = choice[8:0]
+                if game.deposit_item(location.id_num, item_name):
+                    game.moves += 1
+
+                # check if this location is the dorm and all 3 item are present (Win conditon)
+                if location.id_num == DORM and all(
+                        itm in location.items for itm in ["laptop charger", "lucky mug", "usb drive"]):
+                    for i in range(0, game.score):
+                        print("YOU WIN")
+                    game.ongoing = False
+
+        if game.moves == MAX_MOVE:  # No move left and game ends
+            game.ongoing = False
+
         # TODO: remove item from inventory and updates the location items and command
-
         # check if this location is the dorm and all 3 item are present
-
-        # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
