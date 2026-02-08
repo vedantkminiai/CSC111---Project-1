@@ -2,14 +2,93 @@
   "locations": [
     {
       "id": 1,
+      "name": "Dorm",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go east": 4,
+        "deposit USB Drive": 1,
+        "deposit Lucky Mug": 1,
+        "deposit Laptop Charger": 1
+      },
+      "items": []
+    },
+    {
+      "id": 2,
+      "name": "Coffee shop",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go south": 3
+      },
+      "items": []
+    },
+    {
+      "id": 3,
+      "name": "Robart",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go north": 2,
+        "go east": 6
+      },
+      "items": []
+    },
+    {
+      "id": 4,
+      "name": "St.George street",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go west": 1,
+        "go north": 3,
+        "go east": 8,
+        "go south": 5
+      },
+      "items": []
+    },
+    {
+      "id": 5,
+      "name": "Lecture Hall",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go north": 4,
+        "take USB Drive": 5
+      },
+      "items": ["USB Drive"]
+    },
+    {
+      "id": 6,
+      "name": "Library",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go west": 3,
+        "take Laptop Charger": 6,
+      },
+      "items": ["Laptop Charger"]
+    },
+    {
+      "id": 7,
+      "name": "Bahen 2F",
+      "brief_description": "",
+      "long_description": "",
+      "available_commands": {
+        "go south": 8,
+        "take Lucky Mug": 7
+      },
+      "items": ["Lucky Mug"]
+    },
+    {
+      "id": 8,
       "name": "Bahen 1F",
       "brief_description": "You are on the first floor of the Bahen Center. There are elevators to the West, and an exit from the building to St. George street to the East. You see something shiny on the ground -- looks like a toonie?",
       "long_description": "You are on the first floor of the Bahen Center. It's usually crowded at this time of the day, but today it's eerily quiet. Only a few students are studying at the table near the doors. You better not disturb them. One student is rushing down the corridor, wearing a heavy-looking backpack and carrying a textbook in their arms. There are elevators to the West, and an exit from the building to St. George street to the East.",
       "available_commands": {
-        "go south": 4,
-        "go east": 2
+        "go north": 7
       },
-      "items": ["toonie"]
+     "items": []
     }
   ],
   "items": [
