@@ -95,7 +95,6 @@ class AdventureGame:
             locations[loc_data['id']] = location_obj
 
         items = []
-        # TODO: Add Item objects to the items list; your code should be structured similarly to the loop above
         # YOUR CODE BELOW
         for item_data in data['items']:  # Go through each element associated with the 'locations' key in the file
             item_obj = Item(item_data['name'], item_data['start_position'], item_data['target_position'],
@@ -108,32 +107,34 @@ class AdventureGame:
         """Return Location object associated with the provided location ID.
         If no ID is provided, return the Location object associated with the current location.
         """
-
-        # TODO: Complete this method as specified
         if loc_id is None:
             return self._locations[self.current_location_id]
         else:
             return self._locations[loc_id]
+
+    def is_valid_choice(self, choice: str, location: Location, menu: list[str]) -> bool:
+        """"Return whether choice is a valid choice"""
+        if choice in menu:
+            return True
+        elif choice in location.available_commands:
+            return True
+        elif choice.startswith("take "):
+            item_name = choice[5:0]  # slice "take " off choice to get the item's name
+            return item_name in location.items
+        elif choice.startswith("deposit "):
+            item_name = choice[8:0]  # slice "deposit " off choice to get the item's name
+            return any(itm.name == item_name for itm in self.inventory)
+        return False
 
     def take_item(self, loc_id: int, item_name: str) -> bool:
         """Remove the item and the command for the item in the Location associated with the provided location ID
         and add the item to inventory
         return True if successful, False otherwise
 
-
         Preconditions:
-            - loc_id is a vaild location id
-            - item_name is in the location items list
-            - there is a item in self._items where item.name == item_name
+
         """
-        for item in self._items:
-            if item.name == item_name:
-                location = self._locations[loc_id]
-                location.items.remove(item_name)
-                location.available_commands.pop("take " + item_name)
-                self.inventory.append(item)
-                return True
-        return False
+        # TODO
 
     def deposit_item(self, loc_id: int, item_name: str) -> bool:
         """Add the item to the Location associated with the provided location ID
@@ -141,17 +142,9 @@ class AdventureGame:
         return True if successful, False otherwise
 
         Preconditions:
-            - loc_id is a vaild location id
-            - there is a item in self._items where item.name == item_name
+
         """
-        for item in self._items:
-            if item.name == item_name:
-                location = self._locations[loc_id]
-                location.items.append(item_name)
-                location.available_commands.pop("deposit " + item_name)
-                self.score += item.target_points
-                return True
-        return False
+        # TODO
 
 
 if __name__ == "__main__":
@@ -196,9 +189,18 @@ if __name__ == "__main__":
         for action in location.available_commands:
             print("-", action)
 
+        # Display possible take at this location
+        for item_name in location.items:
+            print("-", f"take {item_name}")
+
+        # Display possible deposit at this location
+        for item in game.inventory:
+            if item.target_position == location.id_num:
+                print("-", f"deposit {item.name}")
+
         # Validate choice
         choice = input("\nEnter action: ").lower().strip()
-        while choice not in location.available_commands and choice not in menu:
+        while not game.is_valid_choice(choice, location, menu):
             print("That was an invalid option; try again.")
             choice = input("\nEnter action: ").lower().strip()
 
@@ -228,15 +230,11 @@ if __name__ == "__main__":
 
             # TODO: Add in code to deal with actions which do not change the location (e.g. taking or using an item)
             if choice.startswith("take "):
-                # add item to inventory and updates the location items and command
-                game.take_item(location.id_num, choice.replace("take ", ""))
+            # TODO: add item to inventory and updates the location items and command
+
             elif choice.startswith("deposit "):
-                # remove item from inventory and updates the location items and command
-                item = choice.replace("deposit ", "")
-                if item in game.inventory:
-                    game.deposit_item(location.id_num, item)
-                else:
-                    print(f"You dont have {item}")
+        # TODO: remove item from inventory and updates the location items and command
+
         # check if this location is the dorm and all 3 item are present
 
         # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game

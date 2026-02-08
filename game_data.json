@@ -7,9 +7,6 @@
       "long_description": "",
       "available_commands": {
         "go east": 4,
-        "deposit USB Drive": 1,
-        "deposit Lucky Mug": 1,
-        "deposit Laptop Charger": 1
       },
       "items": []
     },
@@ -20,7 +17,6 @@
       "long_description": "",
       "available_commands": {
         "go south": 3,
-        "buy coffee": 2
       },
       "items": []
     },
@@ -32,7 +28,6 @@
       "available_commands": {
         "go north": 2,
         "go east": 6,
-        "take toonie": 3
       },
       "items": [
         "toonie"
@@ -58,10 +53,9 @@
       "long_description": "",
       "available_commands": {
         "go north": 4,
-        "take USB Drive": 5
       },
       "items": [
-        "USB Drive"
+        "usb drive"
       ]
     },
     {
@@ -71,10 +65,9 @@
       "long_description": "",
       "available_commands": {
         "go west": 3,
-        "take Laptop Charger": 6
       },
       "items": [
-        "Laptop Charger"
+        "laptop charger"
       ]
     },
     {
@@ -84,10 +77,9 @@
       "long_description": "",
       "available_commands": {
         "go west": 8,
-        "take Lucky Mug": 7
       },
       "items": [
-        "Lucky Mug"
+        "lucky mug"
       ]
     },
     {
@@ -103,21 +95,21 @@
   ],
   "items": [
     {
-      "name": "USB Drive",
+      "name": "usb drive",
       "description": ".",
       "start_position": 5,
       "target_position": 1,
       "target_points": 10
     },
     {
-      "name": "Laptop Charger",
+      "name": "laptop charger",
       "description": ".",
       "start_position": 6,
       "target_position": 1,
       "target_points": 10
     },
     {
-      "name": "Lucky Mug",
+      "name": "lucky mug",
       "description": ".",
       "start_position": 2,
       "target_position": 1,
