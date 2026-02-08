@@ -3,31 +3,32 @@
     {
       "id": 1,
       "name": "Dorm",
-      "brief_description": "",
-      "long_description": "",
+      "brief_description": "You are back in your dorm room. This is where everything needs to be returned before the deadline. There is an exit to the South",
+      "long_description": "You are in your dorm room, the place you last remember working before collapsing into a nap. Your desk is cluttered with scribbled notes, empty coasters, and your laptop waiting anxiously for its missing charger. The clock on the wall ticks loudly, reminding you that the submission deadline is getting closer. There is an exit from the building to St. George Street to the East. This is the final destination—once all your missing items are returned here, you’ll be ready to submit.",
       "available_commands": {
-        "go east": 4,
+        "go east": 4
       },
       "items": []
     },
     {
       "id": 2,
       "name": "Coffee shop",
-      "brief_description": "",
-      "long_description": "",
+      "brief_description": "You are inside a quiet campus coffee shop. The smell of coffee lingers in the air. There is an exit to the South.",
+      "long_description": "You are in a small campus coffee shop, dimly lit and unusually calm for this time of day. A barista wipes down the counter while a few students sit hunched over laptops, staring blankly at their screens. The smell of espresso fills the room, reminding you how tired you are. There is an exit from the coffee shop to Robarts to the South. You feel the urge to grab another coffee, but you don’t have time to linger.",
       "available_commands": {
-        "go south": 3,
+        "go south": 3
       },
       "items": []
     },
     {
       "id": 3,
-      "name": "Robart",
-      "brief_description": "",
-      "long_description": "",
+      "name": "Robarts",
+      "brief_description": "You are standing inside Robarts Library, surrounded by towering shelves. There are entrances to the North and East, and an exit to the South.",
+      "long_description": "You are inside Robarts Library, its massive concrete walls looming over you. Rows of books stretch endlessly in every direction, and the quiet hum of studying students fills the space. A few people type furiously at their laptops, racing deadlines just like you. There are exits from Robarts to St. George Street to the South, an entrance to the coffee shop to the North, and an entrance to the library to the East. Somewhere among the desks and shelves, something small glints faintly on the floor.",
       "available_commands": {
         "go north": 2,
         "go east": 6,
+        "go south": 4
       },
       "items": [
         "toonie"
@@ -35,9 +36,9 @@
     },
     {
       "id": 4,
-      "name": "St.George street",
-      "brief_description": "",
-      "long_description": "",
+      "name": "St. George Street",
+      "brief_description": "You are outside on St. George Street, with buildings lining both sides. Paths lead in all directions.",
+      "long_description": "You step outside onto St. George Street. The cold air wakes you up slightly as students pass by in a hurry, heading to lectures or labs. Campus buildings rise on either side of the street, each holding memories of late nights and stressful deadlines. From here, several familiar locations are within reach: your dorm to the West, Robarts to the North, Bahen to the East, and a lecture hall to the South.",
       "available_commands": {
         "go west": 1,
         "go north": 3,
@@ -49,10 +50,10 @@
     {
       "id": 5,
       "name": "Lecture Hall",
-      "brief_description": "",
-      "long_description": "",
+      "brief_description": "You are inside a lecture hall filled with rows of empty seats. There is an exit to the North.",
+      "long_description": "You are in a large lecture hall, the kind where you’ve spent countless hours half-awake listening to lectures. Rows of seats curve toward the front, and a projector screen hangs silently above the podium. Someone must have been here recently — a forgotten USB drive lies near one of the desks. There is an exit to the North leading back outside.",
       "available_commands": {
-        "go north": 4,
+        "go north": 4
       },
       "items": [
         "usb drive"
@@ -61,10 +62,10 @@
     {
       "id": 6,
       "name": "Library",
-      "brief_description": "",
-      "long_description": "",
+      "brief_description": "You are in a quiet library space with students studying silently. There is an exit to the West.",
+      "long_description": "You are in a quiet corner of the library, where students sit silently surrounded by notebooks and textbooks. The atmosphere is tense but focused, as if everyone here is trying to squeeze out the last bit of productivity before a deadline. Near one of the tables, something familiar catches your eye. There is an exit to the West back toward Robarts.",
       "available_commands": {
-        "go west": 3,
+        "go west": 3
       },
       "items": [
         "laptop charger"
@@ -72,52 +73,53 @@
     },
     {
       "id": 7,
-      "name": "Bahen 2F",
-      "brief_description": "",
-      "long_description": "",
+      "name": "Bahen 1F",
+      "brief_description": "You are on the first floor of the Bahen Centre. There are elevators to the East, and an exit to St. George Street to the West.",
+      "long_description": "You are on the first floor of the Bahen Centre. It's usually crowded at this time of the day, but today it's eerily quiet. Only a few students are studying at the table near the doors. You better not disturb them. One student is rushing down the corridor, wearing a heavy-looking backpack and carrying a textbook in their arms. There are elevators to the East, and an exit from the building to St. George Street to the West.",
       "available_commands": {
-        "go west": 8,
+        "go west": 4,
+        "go east": 8
+      },
+      "items": []
+    },
+    {
+      "id": 8,
+      "name": "Bahen 2F",
+      "brief_description": "You are on the second floor of the Bahen Centre, overlooking the atrium below. There is an elevator to the West.",
+      "long_description": "You are on the second floor of the Bahen Centre. The open atrium below echoes faint sounds from the first floor, while students sit along the railings reviewing code and lecture notes. This floor has seen many all-nighters, and you feel a strange sense of nostalgia. There is an elevator to the West. On a nearby table sits a mug that looks very familiar.",
+      "available_commands": {
+        "go west": 7
       },
       "items": [
         "lucky mug"
       ]
-    },
-    {
-      "id": 8,
-      "name": "Bahen 1F",
-      "brief_description": "You are on the first floor of the Bahen Center. There are elevators to the West, and an exit from the building to St. George street to the East. You see something shiny on the ground -- looks like a toonie?",
-      "long_description": "You are on the first floor of the Bahen Center. It's usually crowded at this time of the day, but today it's eerily quiet. Only a few students are studying at the table near the doors. You better not disturb them. One student is rushing down the corridor, wearing a heavy-looking backpack and carrying a textbook in their arms. There are elevators to the West, and an exit from the building to St. George street to the East.",
-      "available_commands": {
-        "go east": 7
-      },
-      "items": []
     }
   ],
   "items": [
     {
       "name": "usb drive",
-      "description": ".",
+      "description": "A small USB drive containing the only copy of your project. Losing this would be a disaster.",
       "start_position": 5,
       "target_position": 1,
       "target_points": 10
     },
     {
       "name": "laptop charger",
-      "description": ".",
+      "description": "Your laptop charger. Without it, your battery won’t last long enough to submit the project.",
       "start_position": 6,
       "target_position": 1,
       "target_points": 10
     },
     {
       "name": "lucky mug",
-      "description": ".",
-      "start_position": 2,
+      "description": "Your lucky U of T mug. It’s been with you through every late-night study session and all-nighter.",
+      "start_position": 8,
       "target_position": 1,
       "target_points": 10
     },
     {
       "name": "toonie",
-      "description": "There is a toonie on the ground. Someone must have dropped it.",
+      "description": "A toonie lying on the ground. It looks recently dropped and still shiny.",
       "start_position": 3,
       "target_position": 2,
       "target_points": 5
