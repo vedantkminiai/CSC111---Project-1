@@ -35,6 +35,8 @@ class AdventureGame:
 
     Instance Attributes:
         - current_location_id: the ID of the location the game is currently in
+        - inventory: inventory of the player
+        - score: score the player has accumulated
         - ongoing: whether the game is still ongoing
     Representation Invariants:
         - # TODO add any appropriate representation invariants as needed
@@ -48,6 +50,8 @@ class AdventureGame:
     _locations: dict[int, Location]
     _items: list[Item]
     current_location_id: int  # Suggested attribute, can be removed
+    inventory: list[Item]
+    score: int
     ongoing: bool  # Suggested attribute, can be removed
 
     def __init__(self, game_data_file: str, initial_location_id: int) -> None:
@@ -69,7 +73,8 @@ class AdventureGame:
 
         # Suggested helper method (you can remove and load these differently if you wish to do so):
         self._locations, self._items = self._load_game_data(game_data_file)
-
+        self.inventory = []
+        self.score = 0
         # Suggested attributes (you can remove and track these differently if you wish to do so):
         self.current_location_id = initial_location_id  # game begins at this location
         self.ongoing = True  # whether the game is ongoing
@@ -110,40 +115,43 @@ class AdventureGame:
         else:
             return self._locations[loc_id]
 
-    def take_item(self, loc_id: int, item_name: str) -> Item:
-        """Remove the item and the command for the item in the Location associated with the provided location ID,
-         then return the item
+    def take_item(self, loc_id: int, item_name: str) -> bool:
+        """Remove the item and the command for the item in the Location associated with the provided location ID
+        and add the item to inventory
+        return True if successful, False otherwise
+
 
         Preconditions:
             - loc_id is a vaild location id
             - item_name is in the location items list
             - there is a item in self._items where item.name == item_name
         """
-        location = self._locations[loc_id]
-        location.items.remove(item_name)
-        location.available_commands.pop("take " + item_name)
-        x = None
         for item in self._items:
             if item.name == item_name:
-                x = item
-        return x
+                location = self._locations[loc_id]
+                location.items.remove(item_name)
+                location.available_commands.pop("take " + item_name)
+                self.inventory.append(item)
+                return True
+        return False
 
-    def deposit_item(self, loc_id: int, item_name: str) -> int:
-        """Add the item to the Location associated with the provided location ID, then return the points from depositing
-         this item
+    def deposit_item(self, loc_id: int, item_name: str) -> bool:
+        """Add the item to the Location associated with the provided location ID
+        and increase score by the item target points
+        return True if successful, False otherwise
 
         Preconditions:
             - loc_id is a vaild location id
             - there is a item in self._items where item.name == item_name
         """
-        location = self._locations[loc_id]
-        location.items.append(item_name)
-        location.available_commands.pop("deposit " + item_name)
-        x = None
         for item in self._items:
             if item.name == item_name:
-                x = item.target_points
-        return x
+                location = self._locations[loc_id]
+                location.items.append(item_name)
+                location.available_commands.pop("deposit " + item_name)
+                self.score += item.target_points
+                return True
+        return False
 
 
 if __name__ == "__main__":
@@ -160,10 +168,6 @@ if __name__ == "__main__":
     game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
     menu = ["look", "inventory", "score", "log", "quit"]  # Regular menu options available at each location
     choice = None
-
-    # Player's status
-    inventory = []
-    score = 0
 
     # Note: You may modify the code below as needed; the following starter code is just a suggestion
     while game.ongoing:
@@ -210,10 +214,10 @@ if __name__ == "__main__":
                 print(f"LOCATION {location.id_num}\n{location.long_description}")
             elif choice == "inventory":
                 print("You are carrying: ")
-                for item in inventory:
+                for item in game.inventory:
                     print("-", item)
             elif choice == "score":
-                print("Current score:", score)
+                print("Current score:", game.score)
             else:
                 game.ongoing = False
 
@@ -229,8 +233,10 @@ if __name__ == "__main__":
             elif choice.startswith("deposit "):
                 # remove item from inventory and updates the location items and command
                 item = choice.replace("deposit ", "")
-                if item in inventory:
-                    score += game.deposit_item(location.id_num, item)
+                if item in game.inventory:
+                    game.deposit_item(location.id_num, item)
+                else:
+                    print(f"You dont have {item}")
         # check if this location is the dorm and all 3 item are present
 
         # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
