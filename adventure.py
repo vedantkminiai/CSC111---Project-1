@@ -190,7 +190,7 @@ if __name__ == "__main__":
             print(f"LOCATION {location.id_num}\n{location.long_description}")
 
         # Display possible actions at this location
-        print("What to do? Choose from: look, inventory, score, log, quit")
+        print("What to do? Choose from: look, inventory, score, log, quit, undo")
         print("At this location, you can also:")
         for action in location.available_commands:
             print("-", action)
