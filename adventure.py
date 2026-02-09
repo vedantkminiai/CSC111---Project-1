@@ -21,6 +21,8 @@ from __future__ import annotations
 import json
 from typing import Optional
 
+from pygame.examples.go_over_there import target_position
+
 from game_entities import Location, Item
 from event_logger import Event, EventList
 
@@ -130,24 +132,42 @@ class AdventureGame:
         return False
 
     def take_item(self, loc_id: int, item_name: str) -> bool:
-        """Remove the item and the command for the item in the Location associated with the provided location ID
-        and add the item to inventory
-        return True if successful, False otherwise
-
-        Preconditions:
-
+        """"Take an item from the given location and put it in the inventory.
+        Return True if successful, False otherwise.
         """
-        # TODO
+        location = self._locations[loc_id]
+
+        # Item must be at this location
+        if item_name not in location.items:
+            return False
+
+        # Find the corresponding Item object
+        for item in self._items:
+            if item.name == item_name:
+                location.items.remove(item_name)
+                self.inventory.append(item)
+                return True
+
+        return False
 
     def deposit_item(self, loc_id: int, item_name: str) -> bool:
-        """Add the item to the Location associated with the provided location ID
-        and increase score by the item target points
-        return True if successful, False otherwise
-
-        Preconditions:
-
+        """Attempt to deposit an item at the given location and take it out of the inventory.
+        Return True if successful, False otherwise.
         """
-        # TODO
+        # current location must be the same as the provided location ID
+        if loc_id != self.current_location_id:
+            return False
+
+        location = self._locations[loc_id]
+
+        for item in self.inventory:
+            if item.name == item_name and item.target_position == loc_id:
+                self.inventory.remove(item)
+                self.score += item.target_points
+                location.items.append(item_name)
+                return True
+
+        return False
 
 
 if __name__ == "__main__":
@@ -163,10 +183,8 @@ if __name__ == "__main__":
     DORM = 1
     MAX_MOVE = 30
     game_log = EventList()  # This is REQUIRED as one of the baseline requirements
-    prev_location = None
-    undo_chances = 3
     game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
-    menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
+    menu = ["look", "inventory", "score", "log", "quit"]  # Regular menu options available at each location
     choice = None
 
     # Note: You may modify the code below as needed; the following starter code is just a suggestion
@@ -191,7 +209,7 @@ if __name__ == "__main__":
             print(f"LOCATION {location.id_num}\n{location.long_description}")
 
         # Display possible actions at this location
-        print("What to do? Choose from: look, inventory, score, log, quit, undo")
+        print("What to do? Choose from: look, inventory, score, log, quit")
         print("At this location, you can also:")
         for action in location.available_commands:
             print("-", action)
@@ -218,7 +236,6 @@ if __name__ == "__main__":
             # TODO: Handle each menu command as appropriate
             if choice == "log":
                 game_log.display_events()
-            # ENTER YOUR CODE BELOW to handle other menu commands (remember to use helper functions as appropriate)
             elif choice == "look":
                 print(f"LOCATION {location.id_num}\n{location.long_description}")
             elif choice == "inventory":
@@ -227,24 +244,13 @@ if __name__ == "__main__":
                     print("-", item)
             elif choice == "score":
                 print("Current score:", game.score)
-            elif choice == "undo":
-                if game.moves >= 1 and undo_chances > 0:
-                    game.current_location_id = prev_location
-                    game.moves -= 1
-                    undo_chances -= 1
-                    print("You have undone your move.", undo_chances, " more remaining undo chances.")
-                elif undo_chances == 0:
-                    print("Cannot undo. You have run out of undo chances.")
-                    print("Complete the puzzle at the Bahen for more undo chances.")
-                else:
-                    print("Cannot undo. You have not made any move yet.")
             else:
+                print("YOU QUITTED")
                 game.ongoing = False
 
         elif choice in location.available_commands:  # action that the location
             # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
             # Handle non-menu actions
-            prev_location = game.current_location_id
             result = location.available_commands[choice]
             game.current_location_id = result
             game.moves += 1  # Go[direction] takes 1 move
@@ -252,7 +258,6 @@ if __name__ == "__main__":
         else:  # action that do not change the location
             # TODO: Add in code to deal with actions which do not change the location (e.g. taking or using an item)
             if choice.startswith("take "):
-                # TODO: add item to inventory and updates the location items and command
                 item_name = choice[5:0]
                 if game.take_item(location.id_num, item_name):
                     game.moves += 1
@@ -268,8 +273,6 @@ if __name__ == "__main__":
                         print("YOU WIN")
                     game.ongoing = False
 
-        if game.moves == MAX_MOVE:  # No move left and game ends
+        if game.moves == MAX_MOVE:  # Runs out of moves (Game Over)
             game.ongoing = False
-
-        # TODO: remove item from inventory and updates the location items and command
-        # check if this location is the dorm and all 3 item are present
+            print("GAME OVER")
