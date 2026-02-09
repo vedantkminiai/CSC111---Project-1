@@ -32,12 +32,16 @@ class Location:
         - available_commands: a mapping of available commands at this location to
                                 the location executing that command would lead to
         - items: items that is in this location
-        - locked: whether this location is locked
         - visited: whether you visited this location before or not visited before
 
 
     Representation Invariants:
-        - # TODO Describe any necessary representation invariants
+        - id_num >= 0
+        - brief_description != ""
+        - long_description != ""
+        - all(cmd != "" for cmd in available_commands)
+        - all(dest >= 0 for dest in available_commands.values())
+        - all(isinstance(item, str) and item != "" for item in items)
     """
 
     # This is just a suggested starter class for Location.
@@ -65,7 +69,10 @@ class Item:
         - target_points: the number of points received for depositing the item in that credit location
 
     Representation Invariants:
-        - # TODO Describe any necessary representation invariants
+        - name != ""
+        - start_position >= 0
+        - target_position >= 0
+        - target_points >= 0
     """
 
     # NOTES:
