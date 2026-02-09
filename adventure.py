@@ -23,6 +23,7 @@ from typing import Optional
 
 from game_entities import Location, Item
 from event_logger import Event, EventList
+import random
 
 
 # Note: You may add in other import statements here as needed
@@ -92,7 +93,7 @@ class AdventureGame:
         locations = {}
         for loc_data in data['locations']:  # Go through each element associated with the 'locations' key in the file
             location_obj = Location(loc_data['id'], loc_data['brief_description'], loc_data['long_description'],
-                                    loc_data['available_commands'], loc_data['items'])
+                                    loc_data['available_commands'], loc_data['items'], loc_data['puzzle_words'])
             locations[loc_data['id']] = location_obj
 
         items = []
@@ -252,6 +253,85 @@ class AdventureGame:
                 return True
         return False
 
+    @staticmethod
+    def generate_word(location: Location):
+        """Generate a word related to the location given for the simple puzzle game.
+        Randomly selects a word from the specified locations puzzle word list.
+
+            Preconditions:
+            - location.puzzle_words != []
+        """
+        words = location.puzzle_words
+        hangman = random.choice(words)
+        return hangman
+
+    # updates word after guessing a letter
+    @staticmethod
+    def update_word(new_hangman) -> str:
+        """Converts list of characters back into a string after user guesses a letter
+        """
+        word_hidden = ""
+        for i in new_hangman:
+            word_hidden += i
+        return word_hidden
+
+    # main
+    def puzzle(self, location: Location) -> bool:
+        """Hangman puzzle game, the puzzle-solver guesses one letter a time to decode the puzzle word.
+        The puzzle-solver has 10 tries to fully decode the puzzle before failing.
+        If they've surpasssed 10 tries, then the option to retry is available.
+        Required for players to obtain special required items.
+        """
+        y = True  # Boolean variable controlling the loop for the game
+        while True:
+            if not y:
+                try_again = input("Would you like to try again? Enter y or n: ")
+                if try_again == "y":
+                    y = True
+                    print()
+                elif try_again == "n":
+                    print("Puzzle Over")
+                    return False
+                else:
+                    print("Invalid input")
+            chosen_word = self.generate_word(location)
+            new_hangman = []
+            for i in chosen_word:
+                new_hangman.append("*")
+            tries = 0
+            while y:
+                updated_word = self.update_word(new_hangman)
+                # Asks the user for a guess and checks if the guess is valid
+                while True:
+                    check = True
+                    guess = input(f"(Guess) Enter a letter in word {updated_word}: ")
+                    if len(guess) > 1:
+                        print("Please enter 1 letter")
+                        check = False
+                    if not guess.isalpha():
+                        print("Please enter a letter")
+                        check = False
+                    if check:
+                        break
+                tries += 1
+                already = False # Checks and reveals if the letter is in word
+                for i in range(len(chosen_word)):
+                    if chosen_word[i] == guess and new_hangman[i] == guess:
+                        already = True
+                        tries -= 1
+                    if chosen_word[i] == guess:
+                        new_hangman[i] = guess  # Outputs if the letter was already entered
+                if already:
+                    print(f"    {guess} is already in the word")
+                x = "*" in new_hangman  # If the user runs out of attempts before guessing the word fully
+                if tries >= 10 and x:
+                    print(f"You have failed the puzzle, the word was {chosen_word}\n")
+                    y = False  # If the user guesses the word fully, outputs how many guesses it took
+                if not x:
+                    print(f"You've completed the puzzle! The word is {chosen_word}. You missed {tries} time(s)\n")
+                    y = False
+                    return True
+
 
 if __name__ == "__main__":
     # When you are ready to check your work with python_ta, uncomment the following lines.
@@ -359,8 +439,16 @@ if __name__ == "__main__":
             # TODO: Add in code to deal with actions which do not change the location (e.g. taking or using an item)
             if choice.startswith("take "):
                 item_name = choice[5:]
-                if game.take_item(location.id_num, item_name):
-                    game.moves += 1
+
+                if location.puzzle_words:
+                    print("You must complete the puzzle to obtain the item.")
+                    print("Guess the word related to the location you're in, one letter at a time. You have 10 tries.")
+                    if game.puzzle(location):
+                        if game.take_item(location.id_num, item_name):
+                            game.moves += 1
+                    else:
+                        print("Cannot take item because puzzle failed")
+
             elif choice.startswith("deposit "):
                 item_name = choice[8:]
                 if game.deposit_item(location.id_num, item_name):
