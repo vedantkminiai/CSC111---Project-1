@@ -8,7 +8,8 @@
       "available_commands": {
         "go east": 4
       },
-      "items": []
+      "items": [],
+      "puzzle_words": []
     },
     {
       "id": 2,
@@ -18,7 +19,8 @@
       "available_commands": {
         "go south": 3
       },
-      "items": []
+      "items": [],
+      "puzzle_words": []
     },
     {
       "id": 3,
@@ -32,6 +34,11 @@
       },
       "items": [
         "toonie"
+      ],
+      "puzzle_words": [
+        "printer",
+        "bookshelf",
+        "file"
       ]
     },
     {
@@ -45,7 +52,8 @@
         "go east": 8,
         "go south": 5
       },
-      "items": []
+      "items": [],
+      "puzzle_words": []
     },
     {
       "id": 5,
@@ -57,6 +65,11 @@
       },
       "items": [
         "usb drive"
+      ],
+      "puzzle_words": [
+        "projector",
+        "ruler",
+        "chalkboard"
       ]
     },
     {
@@ -69,6 +82,10 @@
       },
       "items": [
         "laptop charger"
+      ],
+      "puzzle_words": [
+        "textbook",
+        "ipad"
       ]
     },
     {
@@ -80,7 +97,8 @@
         "go west": 4,
         "go east": 8
       },
-      "items": []
+      "items": [],
+      "puzzle_words": []
     },
     {
       "id": 8,
@@ -92,6 +110,11 @@
       },
       "items": [
         "lucky mug"
+      ],
+      "puzzle_words": [
+        "recursion",
+        "induction",
+        "computer"
       ]
     }
   ],
