@@ -42,7 +42,6 @@ class AdventureGame:
     Representation Invariants:
         - # TODO add any appropriate representation invariants as needed
     """
-
     # Private Instance Attributes (do NOT remove these two attributes):
     #   - _locations: a mapping from location id to Location object.
     #                       This represents all the locations in the game.
@@ -87,7 +86,6 @@ class AdventureGame:
         """Load locations and items from a JSON file with the given filename and
         return a tuple consisting of (1) a dictionary of locations mapping each game location's ID to a Location object,
         and (2) a list of all Item objects."""
-
         with open(filename, 'r') as f:
             data = json.load(f)  # This loads all the data from the JSON file
 
@@ -100,8 +98,8 @@ class AdventureGame:
         items = []
         # YOUR CODE BELOW
         for item_data in data['items']:  # Go through each element associated with the 'locations' key in the file
-            item_obj = Item(item_data['name'], item_data['start_position'], item_data['target_position'],
-                            item_data['target_points'])
+            item_obj = Item(item_data['name'], item_data['description'], item_data['start_position'],
+                            item_data['target_position'], item_data['target_points'], item_data['deposited'])
             items.append(item_obj)
 
         return locations, items
@@ -115,6 +113,18 @@ class AdventureGame:
         else:
             return self._locations[loc_id]
 
+    def get_item(self, item_name: str) -> Item:
+        """Return the Item object with the given name.
+
+            Preconditions:
+                - any(itm.name == item_name for itm in self._items)
+        """
+        for item in self._items:
+            if item.name == item_name:
+                return item
+
+        raise ValueError(f"No item named {item_name}")
+
     def is_valid_choice(self, choice: str, location: Location, menu: list[str]) -> bool:
         """"Return whether choice is a valid choice"""
         if choice in menu:
@@ -122,10 +132,10 @@ class AdventureGame:
         elif choice in location.available_commands:
             return True
         elif choice.startswith("take "):
-            item_name = choice[5:0]  # slice "take " off choice to get the item's name
-            return item_name in location.items
+            item_name = choice[5:]  # slice "take " off choice to get the item's name
+            return item_name in location.items and not self.get_item(item_name).deposited
         elif choice.startswith("deposit "):
-            item_name = choice[8:0]  # slice "deposit " off choice to get the item's name
+            item_name = choice[8:]  # slice "deposit " off choice to get the item's name
             return any(itm.name == item_name and itm.target_position == location.id_num for itm in self.inventory)
         return False
 
@@ -142,8 +152,9 @@ class AdventureGame:
         # Find the corresponding Item object
         for item in self._items:
             if item.name == item_name:
-                location.items.remove(item_name)
-                self.inventory.append(item)
+                location.items.remove(item_name)  # Remove item from location
+                self.inventory.append(item)  # Add item to inventory
+                print(item.description)  # Display the item description
                 return True
 
         return False
@@ -160,11 +171,85 @@ class AdventureGame:
 
         for item in self.inventory:
             if item.name == item_name and item.target_position == loc_id:
-                self.inventory.remove(item)
-                self.score += item.target_points
-                location.items.append(item_name)
+                self.inventory.remove(item)  # Remove item from inventory
+                item.deposited = True  # set item is deposited
+                self.score += item.target_points  # score increase by item.target_points
+                location.items.append(item_name)  # Add item to location
                 return True
 
+        return False
+
+    def _undo_take_item(self, loc_id: int, item_name: str) -> bool:
+        """Undo a previously executed take action.
+        This method removes the specified item from the player's inventory and places it back into the given location.
+        Return True if the undo was successful, and False otherwise.
+
+            Preconditions:
+                - loc_id is a valid location ID
+                - item_name refers to an item that was previously taken
+        """
+        location = self._locations[loc_id]
+
+        # find item object in inventory
+        for item in self.inventory:
+            if item.name == item_name:
+                self.inventory.remove(item)
+                location.items.append(item_name)
+                return True
+        return False
+
+    def _undo_deposit_item(self, loc_id: int, item_name: str) -> bool:
+        """Undo a previously executed deposit action.
+        This method removes the specified item from the given location, restores it to the player's inventory,
+        and reverses the score gained from depositing it.
+        Return True if the undo was successful, and False otherwise.
+
+            Preconditions:
+                - loc_id is a valid location ID
+                - item_name refers to an item that was previously deposited at this location
+        """
+        location = self._locations[loc_id]
+
+        if item_name not in location.items:
+            return False
+
+        item = self.get_item(item_name)
+        if item.target_position != loc_id:
+            return False
+
+        location.items.remove(item_name)
+        self.inventory.append(item)
+        item.deposited = False
+        self.score -= item.target_points
+        return True
+
+    def undo_action(self, game_log: EventList) -> bool:
+        """Undo the most recent non-menu player action.
+        Undo only applies to movement and item actions (e.g., 'go ...', 'take ...', 'deposit ...').
+        If the most recent action was a menu command, this returns False and does nothing.
+        """
+        previous_game_state = game_log.last.prev
+        previous_location_id = previous_game_state.id_num
+        command = previous_game_state.next_command
+
+        location = self.get_location(previous_location_id)
+        if command in location.available_commands:  # if the command changes location roll back to its previous location
+            self.current_location_id = previous_location_id
+            game_log.remove_last_event()
+            self.moves -= 1
+            return True
+        elif command.startswith("take "):
+            item_name = command[5:]
+            if self._undo_take_item(previous_location_id, item_name):
+                game_log.remove_last_event()
+                self.moves -= 1
+                return True
+        elif command.startswith("deposit "):
+            item_name = command[8:]
+            if self._undo_deposit_item(previous_location_id, item_name):
+                game_log.remove_last_event()
+                self.moves -= 1
+                return True
         return False
 
 
@@ -179,11 +264,11 @@ if __name__ == "__main__":
     # })
 
     DORM = 1
-    MAX_MOVE = 30
-    game_log = EventList()  # This is REQUIRED as one of the baseline requirements
-    prev_location = None
+    MAX_MOVE = 20
     undo_chances = 3
-    game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
+
+    game_log = EventList()  # This is REQUIRED as one of the baseline requirements
+    game = AdventureGame('game_data.json', DORM)  # load data, setting initial location ID to 1
     menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
     choice = None
 
@@ -207,6 +292,7 @@ if __name__ == "__main__":
             print(f"LOCATION {location.id_num}\n{location.brief_description}")
         else:
             print(f"LOCATION {location.id_num}\n{location.long_description}")
+            location.visited = True
 
         # Display possible actions at this location
         print("What to do? Choose from: look, inventory, score, log, quit, undo")
@@ -216,7 +302,9 @@ if __name__ == "__main__":
 
         # Display possible take at this location
         for item_name in location.items:
-            print("-", f"take {item_name}")
+            itm = game.get_item(item_name)
+            if not itm.deposited:
+                print("-", f"take {item_name}")
 
         # Display possible deposit at this location
         for item in game.inventory:
@@ -237,25 +325,29 @@ if __name__ == "__main__":
             if choice == "log":
                 game_log.display_events()
             elif choice == "look":
-                print(f"LOCATION {location.id_num}\n{location.long_description}")
+                print(f"Look at LOCATION {location.id_num}\n{location.long_description}")
+                print("\n")
             elif choice == "inventory":
                 print("You are carrying: ")
                 for item in game.inventory:
-                    print("-", item)
+                    print("-", item.name)
+                print("\n")
             elif choice == "score":
                 print("Current score:", game.score)
+                print("\n")
             elif choice == "undo":
                 if game.moves >= 1 and undo_chances > 0:
-                    game.current_location_id = prev_location
-                    game.moves -= 1
-                    undo_chances -= 1
-                    print("You have undone your move.", undo_chances, " more remaining undo chances.")
+                    if game.undo_action(game_log):
+                        undo_chances -= 1
+                        print("You have undone your move.", undo_chances, " more remaining undo chances.")
+                    else:
+                        print("Cannot undo. Previous command is from menu")
                 elif undo_chances == 0:
                     print("Cannot undo. You have run out of undo chances.")
                     print("Complete the puzzle at the Bahen for more undo chances.")
                 else:
                     print("Cannot undo. You have not made any move yet.")
-
+                print("\n")
             else:
                 print("YOU QUITTED")
                 game.ongoing = False
@@ -263,7 +355,6 @@ if __name__ == "__main__":
         elif choice in location.available_commands:  # action that the location
             # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
             # Handle non-menu actions
-            prev_location = game.current_location_id
             result = location.available_commands[choice]
             game.current_location_id = result
             game.moves += 1  # Go[direction] takes 1 move
@@ -271,21 +362,27 @@ if __name__ == "__main__":
         else:  # action that do not change the location
             # TODO: Add in code to deal with actions which do not change the location (e.g. taking or using an item)
             if choice.startswith("take "):
-                item_name = choice[5:0]
+                item_name = choice[5:]
                 if game.take_item(location.id_num, item_name):
                     game.moves += 1
             elif choice.startswith("deposit "):
-                item_name = choice[8:0]
+                item_name = choice[8:]
                 if game.deposit_item(location.id_num, item_name):
                     game.moves += 1
 
                 # check if this location is the dorm and all 3 item are present (Win conditon)
                 if location.id_num == DORM and all(
                         itm in location.items for itm in ["laptop charger", "lucky mug", "usb drive"]):
-                    for i in range(0, game.score):
-                        print("YOU WIN")
+                    print("YOU WIN!!!")
+                    print("With all your items recovered," +
+                          " you rush back to your dorm and submit the project just in time.")
+                    print(f"Final Score: {game.score}")
+                    print(f"moves taken: {game.moves}")
                     game.ongoing = False
 
         if game.moves == MAX_MOVE:  # Runs out of moves (Game Over)
             game.ongoing = False
             print("GAME OVER")
+            print("Time’s up — the deadline has passed, and the project was not submitted.")
+            print(f"Final Score: {game.score}")
+            print(f"moves taken: {game.moves}")
