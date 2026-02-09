@@ -64,12 +64,15 @@ class Item:
 
     Instance Attributes:
         - name: name of the item
+        - description: description of the item
         - start_position: the location ID of where this item is initially located
         - target_position: the location ID of where the item is to be deposited for credit
         - target_points: the number of points received for depositing the item in that credit location
+        - deposited: whether the item has already been deposited before
 
     Representation Invariants:
         - name != ""
+        - description != ""
         - start_position >= 0
         - target_position >= 0
         - target_points >= 0
@@ -84,9 +87,11 @@ class Item:
     # All item objects in your game MUST be represented as an instance of this class.
 
     name: str
+    description: str
     start_position: int
     target_position: int
     target_points: int
+    deposited: bool
 
 
 # Note: Other entities you may want to add, depending on your game plan:
