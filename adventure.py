@@ -183,8 +183,10 @@ if __name__ == "__main__":
     DORM = 1
     MAX_MOVE = 30
     game_log = EventList()  # This is REQUIRED as one of the baseline requirements
+    prev_location = None
+    undo_chances = 3
     game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
-    menu = ["look", "inventory", "score", "log", "quit"]  # Regular menu options available at each location
+    menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
     choice = None
 
     # Note: You may modify the code below as needed; the following starter code is just a suggestion
@@ -209,7 +211,7 @@ if __name__ == "__main__":
             print(f"LOCATION {location.id_num}\n{location.long_description}")
 
         # Display possible actions at this location
-        print("What to do? Choose from: look, inventory, score, log, quit")
+        print("What to do? Choose from: look, inventory, score, log, quit, undo")
         print("At this location, you can also:")
         for action in location.available_commands:
             print("-", action)
@@ -244,6 +246,18 @@ if __name__ == "__main__":
                     print("-", item)
             elif choice == "score":
                 print("Current score:", game.score)
+            elif choice == "undo":
+                if game.moves >= 1 and undo_chances > 0:
+                    game.current_location_id = prev_location
+                    game.moves -= 1
+                    undo_chances -= 1
+                    print("You have undone your move.", undo_chances, " more remaining undo chances.")
+                elif undo_chances == 0:
+                    print("Cannot undo. You have run out of undo chances.")
+                    print("Complete the puzzle at the Bahen for more undo chances.")
+                else:
+                    print("Cannot undo. You have not made any move yet.")
+
             else:
                 print("YOU QUITTED")
                 game.ongoing = False
@@ -251,6 +265,7 @@ if __name__ == "__main__":
         elif choice in location.available_commands:  # action that the location
             # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
             # Handle non-menu actions
+            prev_location = game.current_location_id
             result = location.available_commands[choice]
             game.current_location_id = result
             game.moves += 1  # Go[direction] takes 1 move
