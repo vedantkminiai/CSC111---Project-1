@@ -55,6 +55,7 @@ class Location:
     long_description: str
     available_commands: dict[str, int]
     items: list[str]
+    puzzle_words: list[str]
     visited: bool = False
 
 
