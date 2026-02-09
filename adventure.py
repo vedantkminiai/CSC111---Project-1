@@ -164,6 +164,7 @@ if __name__ == "__main__":
     MAX_MOVE = 30
     game_log = EventList()  # This is REQUIRED as one of the baseline requirements
     prev_location = None
+    undo_chances = 3
     game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
     menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
     choice = None
@@ -227,12 +228,16 @@ if __name__ == "__main__":
             elif choice == "score":
                 print("Current score:", game.score)
             elif choice == "undo":
-                if game.moves >= 1:
+                if game.moves >= 1 and undo_chances > 0:
                     game.current_location_id = prev_location
                     game.moves -= 1
-                    print("You have undone your move. 2 more remaining")
+                    undo_chances -= 1
+                    print("You have undone your move.", undo_chances, " more remaining undo chances.")
+                elif undo_chances == 0:
+                    print("Cannot undo. You have run out of undo chances.")
+                    print("Complete the puzzle at the Bahen for more undo chances.")
                 else:
-                    print("Cannot undo, you have not made any move yet")
+                    print("Cannot undo. You have not made any move yet.")
             else:
                 game.ongoing = False
 
