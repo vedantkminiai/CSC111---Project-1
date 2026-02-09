@@ -163,8 +163,9 @@ if __name__ == "__main__":
     DORM = 1
     MAX_MOVE = 30
     game_log = EventList()  # This is REQUIRED as one of the baseline requirements
+    prev_location = None
     game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
-    menu = ["look", "inventory", "score", "log", "quit"]  # Regular menu options available at each location
+    menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
     choice = None
 
     # Note: You may modify the code below as needed; the following starter code is just a suggestion
@@ -225,12 +226,20 @@ if __name__ == "__main__":
                     print("-", item)
             elif choice == "score":
                 print("Current score:", game.score)
+            elif choice == "undo":
+                if game.moves >= 1:
+                    game.current_location_id = prev_location
+                    game.moves -= 1
+                    print("You have undone your move. 2 more remaining")
+                else:
+                    print("Cannot undo, you have not made any move yet")
             else:
                 game.ongoing = False
 
         elif choice in location.available_commands:  # action that the location
             # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
             # Handle non-menu actions
+            prev_location = game.current_location_id
             result = location.available_commands[choice]
             game.current_location_id = result
             game.moves += 1  # Go[direction] takes 1 move
