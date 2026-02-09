@@ -101,28 +101,32 @@
       "description": "A small USB drive containing the only copy of your project. Losing this would be a disaster.",
       "start_position": 5,
       "target_position": 1,
-      "target_points": 10
+      "target_points": 10,
+      "deposited": false
     },
     {
       "name": "laptop charger",
       "description": "Your laptop charger. Without it, your battery won’t last long enough to submit the project.",
       "start_position": 6,
       "target_position": 1,
-      "target_points": 10
+      "target_points": 10,
+      "deposited": false
     },
     {
       "name": "lucky mug",
       "description": "Your lucky U of T mug. It’s been with you through every late-night study session and all-nighter.",
       "start_position": 8,
       "target_position": 1,
-      "target_points": 10
+      "target_points": 10,
+      "deposited": false
     },
     {
       "name": "toonie",
       "description": "A toonie lying on the ground. It looks recently dropped and still shiny.",
       "start_position": 3,
       "target_position": 2,
-      "target_points": 5
+      "target_points": 5,
+      "deposited": false
     }
   ]
 }
