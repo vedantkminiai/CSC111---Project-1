@@ -21,8 +21,6 @@ from __future__ import annotations
 import json
 from typing import Optional
 
-from pygame.examples.go_over_there import target_position
-
 from game_entities import Location, Item
 from event_logger import Event, EventList
 
