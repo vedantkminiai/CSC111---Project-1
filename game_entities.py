@@ -32,6 +32,7 @@ class Location:
         - available_commands: a mapping of available commands at this location to
                                 the location executing that command would lead to
         - items: items that is in this location
+        - puzzle_words: a list of words for a hangman puzzle
         - visited: whether you visited this location before or not visited before
 
 
