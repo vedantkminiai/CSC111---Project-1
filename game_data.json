@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Dorm",
       "brief_description": "You are back in your dorm room. This is where everything needs to be returned before the deadline. There is an exit to the South",
-      "long_description": "You are in your dorm room, the place you last remember working before collapsing into a nap. Your desk is cluttered with scribbled notes, empty coasters, and your laptop waiting anxiously for its missing charger. The clock on the wall ticks loudly, reminding you that the submission deadline is getting closer. There is an exit from the building to St. George Street to the East. This is the final destination—once all your missing items are returned here, you’ll be ready to submit.",
+      "long_description": "You are in your dorm room, the place you last remember working before collapsing into a nap. Your desk is cluttered with scribbled notes, empty coasters, and your laptop waiting anxiously for its missing charger. The clock on the wall ticks loudly, reminding you that the submission deadline is getting closer. There is an exit from the building to St. George Street to the East. This is the final destination—once all your missing items are returned here, you'll be ready to submit.",
       "available_commands": {
         "go east": 4
       },
@@ -15,7 +15,7 @@
       "id": 2,
       "name": "Coffee shop",
       "brief_description": "You are inside a quiet campus coffee shop. The smell of coffee lingers in the air. There is an exit to the South.",
-      "long_description": "You are in a small campus coffee shop, dimly lit and unusually calm for this time of day. A barista wipes down the counter while a few students sit hunched over laptops, staring blankly at their screens. The smell of espresso fills the room, reminding you how tired you are. There is an exit from the coffee shop to Robarts to the South. You feel the urge to grab another coffee, but you don’t have time to linger.",
+      "long_description": "You are in a small campus coffee shop, dimly lit and unusually calm for this time of day. A barista wipes down the counter while a few students sit hunched over laptops, staring blankly at their screens. The smell of espresso fills the room, reminding you how tired you are. There is an exit from the coffee shop to Robarts to the South. You feel the urge to grab another coffee, but you don't have time to linger.",
       "available_commands": {
         "go south": 3
       },
@@ -49,7 +49,7 @@
       "available_commands": {
         "go west": 1,
         "go north": 3,
-        "go east": 8,
+        "go east": 7,
         "go south": 5
       },
       "items": [],
@@ -59,7 +59,7 @@
       "id": 5,
       "name": "Lecture Hall",
       "brief_description": "You are inside a lecture hall filled with rows of empty seats. There is an exit to the North.",
-      "long_description": "You are in a large lecture hall, the kind where you’ve spent countless hours half-awake listening to lectures. Rows of seats curve toward the front, and a projector screen hangs silently above the podium. Someone must have been here recently — a forgotten USB drive lies near one of the desks. There is an exit to the North leading back outside.",
+      "long_description": "You are in a large lecture hall, the kind where you've spent countless hours half-awake listening to lectures. Rows of seats curve toward the front, and a projector screen hangs silently above the podium. Someone must have been here recently — a forgotten USB drive lies near one of the desks. There is an exit to the North leading back outside.",
       "available_commands": {
         "go north": 4
       },
@@ -129,7 +129,7 @@
     },
     {
       "name": "laptop charger",
-      "description": "Your laptop charger. Without it, your battery won’t last long enough to submit the project.",
+      "description": "Your laptop charger. Without it, your battery won't last long enough to submit the project.",
       "start_position": 6,
       "target_position": 1,
       "target_points": 10,
@@ -137,7 +137,7 @@
     },
     {
       "name": "lucky mug",
-      "description": "Your lucky U of T mug. It’s been with you through every late-night study session and all-nighter.",
+      "description": "Your lucky U of T mug. It's been with you through every late-night study session and all-nighter.",
       "start_position": 8,
       "target_position": 1,
       "target_points": 10,
