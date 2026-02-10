@@ -35,21 +35,16 @@ class Location:
         - puzzle_words: a list of words for a hangman puzzle
         - visited: whether you visited this location before or not visited before
 
-
     Representation Invariants:
         - id_num >= 0
         - brief_description != ""
         - long_description != ""
+        - brief_description != long_description
         - all(cmd != "" for cmd in available_commands)
         - all(dest >= 0 for dest in available_commands.values())
-        - all(isinstance(item, str) and item != "" for item in items)
+        - all(item != "" for item in items)
+        - all(word.isalpha() for word in puzzle_words)
     """
-
-    # This is just a suggested starter class for Location.
-    # You may change/add parameters and the data available for each Location object as you see fit.
-    #
-    # The only thing you must NOT change is the name of this class: Location.
-    # All locations in your game MUST be represented as an instance of this class.
 
     id_num: int
     brief_description: str
@@ -57,7 +52,7 @@ class Location:
     available_commands: dict[str, int]
     items: list[str]
     puzzle_words: list[str]
-    visited: bool = False
+    visited: bool
 
 
 @dataclass
@@ -80,14 +75,6 @@ class Item:
         - target_points >= 0
     """
 
-    # NOTES:
-    # This is just a suggested starter class for Item.
-    # You may change these parameters and the data available for each Item object as you see fit.
-    # (The current parameters correspond to the example in the handout).
-    #
-    # The only thing you must NOT change is the name of this class: Item.
-    # All item objects in your game MUST be represented as an instance of this class.
-
     name: str
     description: str
     start_position: int
@@ -95,11 +82,6 @@ class Item:
     target_points: int
     deposited: bool
 
-
-# Note: Other entities you may want to add, depending on your game plan:
-# - Puzzle class to represent special locations (could inherit from Location class if it seems suitable)
-# - Player class
-# etc.
 
 if __name__ == "__main__":
     pass
