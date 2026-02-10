@@ -468,7 +468,7 @@ if __name__ == "__main__":
                     print(f"moves taken: {game.moves}")
                     game.ongoing = False
 
-        # Check Lose condition (Player runs out of moves
+        # Check Lose condition (Player runs out of moves)
         if game.moves == MAX_MOVE:
             game.ongoing = False
             print("GAME OVER")
