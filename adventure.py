@@ -367,15 +367,11 @@ if __name__ == "__main__":
 
         location = game.get_location()
 
-        # TODO: Add new Event to game log to represent current game location
-        #  Note that the <choice> variable should be the command which led to this event
-        # YOUR CODE HERE
+        #  Add new Event to game log to represent current game location
         event = Event(location.id_num, location.long_description)
         game_log.add_event(event, choice)
 
-        # TODO: Depending on whether or not it's been visited before,
         #  print either full description (first time visit) or brief description (every subsequent visit) of location
-        # YOUR CODE HERE
         if location.visited:
             print(f"LOCATION {location.id_num}      (Moves {game.moves})\n{location.brief_description}")
         else:
@@ -408,8 +404,8 @@ if __name__ == "__main__":
         print("========")
         print("You decided to:", choice)
 
+        # Handle each menu command "look", "inventory", "score", "log", "quit", "undo"
         if choice in menu:
-            # TODO: Handle each menu command as appropriate
             if choice == "log":
                 game_log.display_events()
             elif choice == "look":
@@ -435,15 +431,15 @@ if __name__ == "__main__":
                 print("YOU QUITTED")
                 game.ongoing = False
 
-        elif choice in location.available_commands:  # action that the location
-            # TODO: Add in code to deal with special locations (e.g. puzzles) as needed for your game
-            # Handle non-menu actions
+        # Handle Go[direction] command - action that change the location
+        elif choice in location.available_commands:
             result = location.available_commands[choice]
             game.current_location_id = result
             game.moves += 1  # Go[direction] takes 1 move
 
-        else:  # action that do not change the location
-            # TODO: Add in code to deal with actions which do not change the location (e.g. taking or using an item)
+        # Handle command that do not change the location
+        else:
+            # Handle "take " command
             if choice.startswith("take "):
                 item_name = choice[5:]
 
@@ -456,12 +452,13 @@ if __name__ == "__main__":
                     else:
                         print("Cannot take item because puzzle failed")
 
+            # Handle "deposit " command
             elif choice.startswith("deposit "):
                 item_name = choice[8:]
                 if game.deposit_item(location.id_num, item_name):
                     game.moves += 1
 
-                # check if this location is the dorm and all 3 item are present (Win conditon)
+                # Check Win condition upon depositing an item (all three IMPORTANT ITEM are at dorm to submit project)
                 if location.id_num == DORM and all(
                         itm in location.items for itm in ["laptop charger", "lucky mug", "usb drive"]):
                     print("YOU WIN!!!")
@@ -471,7 +468,8 @@ if __name__ == "__main__":
                     print(f"moves taken: {game.moves}")
                     game.ongoing = False
 
-        if game.moves == MAX_MOVE:  # Runs out of moves (Game Over)
+        # Check Lose condition (Player runs out of moves
+        if game.moves == MAX_MOVE:
             game.ongoing = False
             print("GAME OVER")
             print("Time's up — the deadline has passed, and the project was not submitted.")
