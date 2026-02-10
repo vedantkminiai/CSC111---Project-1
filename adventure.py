@@ -29,8 +29,6 @@ import random
 # Note: You may add in other import statements here as needed
 
 # Note: You may add helper functions, classes, etc. below as needed
-
-
 class AdventureGame:
     """A text adventure game class storing all location, item and map data.
 
@@ -41,7 +39,14 @@ class AdventureGame:
         - moves: amount of moves the player has done
         - ongoing: whether the game is still ongoing
     Representation Invariants:
-        - # TODO add any appropriate representation invariants as needed
+        - _locations != {}
+        - all(id >= 0 for id in _locations)
+        - all(id == _locations[id].id_num for id in _locations)
+        - current_location_id in _locations
+        - score >= 0
+        - moves >= 0
+        - all(item in _items for item in inventory)
+        - all(not item.deposited for item in inventory)
     """
     # Private Instance Attributes (do NOT remove these two attributes):
     #   - _locations: a mapping from location id to Location object.
@@ -50,11 +55,11 @@ class AdventureGame:
 
     _locations: dict[int, Location]
     _items: list[Item]
-    current_location_id: int  # Suggested attribute, can be removed
+    current_location_id: int
     inventory: list[Item]
     score: int
     moves: int
-    ongoing: bool  # Suggested attribute, can be removed
+    ongoing: bool
 
     def __init__(self, game_data_file: str, initial_location_id: int) -> None:
         """
