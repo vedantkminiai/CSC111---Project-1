@@ -21,9 +21,9 @@ from __future__ import annotations
 import json
 from typing import Optional
 
+import random
 from game_entities import Location, Item
 from event_logger import Event, EventList
-import random
 
 
 # Note: You may add in other import statements here as needed
@@ -98,7 +98,8 @@ class AdventureGame:
         locations = {}
         for loc_data in data['locations']:  # Go through each element associated with the 'locations' key in the file
             location_obj = Location(loc_data['id'], loc_data['brief_description'], loc_data['long_description'],
-                                    loc_data['available_commands'], loc_data['items'], loc_data['puzzle_words'])
+                                    loc_data['available_commands'], loc_data['items'], loc_data['puzzle_words'],
+                                    loc_data['visited'])
             locations[loc_data['id']] = location_obj
 
         items = []
@@ -119,53 +120,53 @@ class AdventureGame:
         else:
             return self._locations[loc_id]
 
-    def get_item(self, item_name: str) -> Item:
+    def get_item(self, name: str) -> Item:
         """Return the Item object with the given name.
 
             Preconditions:
-                - any(itm.name == item_name for itm in self._items)
+                - any(itm.name == name for itm in self._items)
         """
-        for item in self._items:
-            if item.name == item_name:
-                return item
+        for itm in self._items:
+            if itm.name == name:
+                return itm
 
-        raise ValueError(f"No item named {item_name}")
+        raise ValueError(f"No item named {name}")
 
-    def is_valid_choice(self, choice: str, location: Location, menu: list[str]) -> bool:
-        """"Return whether choice is a valid choice"""
-        if choice in menu:
+    def is_valid_choice(self, command: str, loc: Location, options: list[str]) -> bool:
+        """Return whether choice is a valid command"""
+        if command in options:
             return True
-        elif choice in location.available_commands:
+        elif command in loc.available_commands:
             return True
-        elif choice.startswith("take "):
-            item_name = choice[5:]  # slice "take " off choice to get the item's name
-            return item_name in location.items and not self.get_item(item_name).deposited
-        elif choice.startswith("deposit "):
-            item_name = choice[8:]  # slice "deposit " off choice to get the item's name
-            return any(itm.name == item_name and itm.target_position == location.id_num for itm in self.inventory)
+        elif command.startswith("take "):
+            name = command[5:]  # slice "take " off choice to get the item's name
+            return name in loc.items and not self.get_item(name).deposited
+        elif command.startswith("deposit "):
+            name = command[8:]  # slice "deposit " off choice to get the item's name
+            return any(itm.name == name and itm.target_position == loc.id_num for itm in self.inventory)
         return False
 
-    def take_item(self, loc_id: int, item_name: str) -> bool:
-        """"Take an item from the given location and put it in the inventory.
+    def take_item(self, loc_id: int, name: str) -> bool:
+        """Take an item from the given location and put it in the inventory.
         Return True if successful, False otherwise.
         """
-        location = self._locations[loc_id]
+        loc = self._locations[loc_id]
 
         # Item must be at this location
-        if item_name not in location.items:
+        if name not in loc.items:
             return False
 
         # Find the corresponding Item object
-        for item in self._items:
-            if item.name == item_name:
-                location.items.remove(item_name)  # Remove item from location
-                self.inventory.append(item)  # Add item to inventory
-                print(item.description)  # Display the item description
+        for itm in self._items:
+            if itm.name == name:
+                loc.items.remove(name)  # Remove item from location
+                self.inventory.append(itm)  # Add item to inventory
+                print(itm.description)  # Display the item description
                 return True
 
         return False
 
-    def deposit_item(self, loc_id: int, item_name: str) -> bool:
+    def deposit_item(self, loc_id: int, name: str) -> bool:
         """Attempt to deposit an item at the given location and take it out of the inventory.
         Return True if successful, False otherwise.
         """
@@ -173,38 +174,38 @@ class AdventureGame:
         if loc_id != self.current_location_id:
             return False
 
-        location = self._locations[loc_id]
+        loc = self._locations[loc_id]
 
-        for item in self.inventory:
-            if item.name == item_name and item.target_position == loc_id:
-                self.inventory.remove(item)  # Remove item from inventory
-                item.deposited = True  # set item is deposited
-                self.score += item.target_points  # score increase by item.target_points
-                location.items.append(item_name)  # Add item to location
+        for itm in self.inventory:
+            if itm.name == name and itm.target_position == loc_id:
+                self.inventory.remove(itm)  # Remove item from inventory
+                itm.deposited = True  # set item is deposited
+                self.score += itm.target_points  # score increase by itm.target_points
+                loc.items.append(name)  # Add item to location
                 return True
 
         return False
 
-    def _undo_take_item(self, loc_id: int, item_name: str) -> bool:
+    def _undo_take_item(self, loc_id: int, name: str) -> bool:
         """Undo a previously executed take action.
         This method removes the specified item from the player's inventory and places it back into the given location.
         Return True if the undo was successful, and False otherwise.
 
             Preconditions:
                 - loc_id is a valid location ID
-                - item_name refers to an item that was previously taken
+                - name refers to an item that was previously taken
         """
-        location = self._locations[loc_id]
+        loc = self._locations[loc_id]
 
         # find item object in inventory
-        for item in self.inventory:
-            if item.name == item_name:
-                self.inventory.remove(item)
-                location.items.append(item_name)
+        for itm in self.inventory:
+            if itm.name == name:
+                self.inventory.remove(itm)
+                loc.items.append(name)
                 return True
         return False
 
-    def _undo_deposit_item(self, loc_id: int, item_name: str) -> bool:
+    def _undo_deposit_item(self, loc_id: int, name: str) -> bool:
         """Undo a previously executed deposit action.
         This method removes the specified item from the given location, restores it to the player's inventory,
         and reverses the score gained from depositing it.
@@ -212,48 +213,48 @@ class AdventureGame:
 
             Preconditions:
                 - loc_id is a valid location ID
-                - item_name refers to an item that was previously deposited at this location
+                - name refers to an item that was previously deposited at this location
         """
-        location = self._locations[loc_id]
+        loc = self._locations[loc_id]
 
-        if item_name not in location.items:
+        if name not in loc.items:
             return False
 
-        item = self.get_item(item_name)
-        if item.target_position != loc_id:
+        itm = self.get_item(name)
+        if itm.target_position != loc_id:
             return False
 
-        location.items.remove(item_name)
-        self.inventory.append(item)
-        item.deposited = False
-        self.score -= item.target_points
+        loc.items.remove(name)
+        self.inventory.append(itm)
+        itm.deposited = False
+        self.score -= itm.target_points
         return True
 
-    def undo_action(self, game_log: EventList) -> bool:
+    def undo_action(self, log: EventList) -> bool:
         """Undo the most recent non-menu player action.
         Undo only applies to movement and item actions (e.g., 'go ...', 'take ...', 'deposit ...').
         If the most recent action was a menu command, this returns False and does nothing.
         """
-        previous_game_state = game_log.last.prev
+        previous_game_state = log.last.prev
         previous_location_id = previous_game_state.id_num
         command = previous_game_state.next_command
 
-        location = self.get_location(previous_location_id)
-        if command in location.available_commands:  # if the command changes location roll back to its previous location
+        loc = self.get_location(previous_location_id)
+        if command in loc.available_commands:  # if the command changes location roll back to its previous location
             self.current_location_id = previous_location_id
-            game_log.remove_last_event()
+            log.remove_last_event()
             self.moves -= 1
             return True
         elif command.startswith("take "):
-            item_name = command[5:]
-            if self._undo_take_item(previous_location_id, item_name):
-                game_log.remove_last_event()
+            name = command[5:]
+            if self._undo_take_item(previous_location_id, name):
+                log.remove_last_event()
                 self.moves -= 1
                 return True
         elif command.startswith("deposit "):
-            item_name = command[8:]
-            if self._undo_deposit_item(previous_location_id, item_name):
-                game_log.remove_last_event()
+            name = command[8:]
+            if self._undo_deposit_item(previous_location_id, name):
+                log.remove_last_event()
                 self.moves -= 1
                 return True
         return False
@@ -319,7 +320,7 @@ class AdventureGame:
                     if check:
                         break
                 tries += 1
-                already = False # Checks and reveals if the letter is in word
+                already = False  # Checks and reveals if the letter is in word
                 for i in range(len(chosen_word)):
                     if chosen_word[i] == guess and new_hangman[i] == guess:
                         already = True
@@ -336,17 +337,19 @@ class AdventureGame:
                     print(f"You've completed the puzzle! The word is {chosen_word}. You missed {tries} time(s)\n")
                     y = False
                     return True
+        return False
 
 
 if __name__ == "__main__":
     # When you are ready to check your work with python_ta, uncomment the following lines.
     # (Delete the "#" and space before each line.)
     # IMPORTANT: keep this code indented inside the "if __name__ == '__main__'" block
-    # import python_ta
-    # python_ta.check_all(config={
-    #     'max-line-length': 120,
-    #     'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
-    # })
+    import python_ta
+
+    python_ta.check_all(config={
+        'max-line-length': 120,
+        'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
+    })
 
     DORM = 1  # initial starting location
     MAX_MOVE = 20
@@ -387,8 +390,8 @@ if __name__ == "__main__":
 
         # Display possible take at this location
         for item_name in location.items:
-            itm = game.get_item(item_name)
-            if not itm.deposited:
+            item = game.get_item(item_name)
+            if not item.deposited:
                 print("-", f"take {item_name}")
 
         # Display possible deposit at this location
@@ -426,7 +429,6 @@ if __name__ == "__main__":
                         print("Cannot undo. Previous command is from menu")
                 elif undo_chances == 0:
                     print("Cannot undo. You have run out of undo chances.")
-                    print("Complete the puzzle at the Bahen for more undo chances.")
                 else:
                     print("Cannot undo. You have not made any move yet.")
             else:
@@ -463,8 +465,8 @@ if __name__ == "__main__":
                 if location.id_num == DORM and all(
                         itm in location.items for itm in ["laptop charger", "lucky mug", "usb drive"]):
                     print("YOU WIN!!!")
-                    print("With all your items recovered," +
-                          " you rush back to your dorm and submit the project just in time.")
+                    print(
+                        "With all your items recovered, you rush back to your dorm and submit the project just in time")
                     print(f"Final Score: {game.score}")
                     print(f"moves taken: {game.moves}")
                     game.ongoing = False
