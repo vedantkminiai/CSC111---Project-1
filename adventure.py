@@ -343,12 +343,12 @@ if __name__ == "__main__":
     #     'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
     # })
 
-    DORM = 1
-    MAX_MOVE = 30
+    DORM = 1  # initial starting location
+    MAX_MOVE = 20
     undo_chances = 3
 
     game_log = EventList()  # This is REQUIRED as one of the baseline requirements
-    game = AdventureGame('game_data.json', 1)  # load data, setting initial location ID to 1
+    game = AdventureGame('game_data.json', DORM)  # load data, setting initial location ID to 1
     menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
     choice = None
 
@@ -369,9 +369,9 @@ if __name__ == "__main__":
         #  print either full description (first time visit) or brief description (every subsequent visit) of location
         # YOUR CODE HERE
         if location.visited:
-            print(f"LOCATION {location.id_num}\n{location.brief_description}")
+            print(f"LOCATION {location.id_num}      (Moves {game.moves})\n{location.brief_description}")
         else:
-            print(f"LOCATION {location.id_num}\n{location.long_description}")
+            print(f"LOCATION {location.id_num}      (Moves {game.moves})\n{location.long_description}")
             location.visited = True
 
         # Display possible actions at this location
@@ -457,9 +457,16 @@ if __name__ == "__main__":
                 # check if this location is the dorm and all 3 item are present (Win conditon)
                 if location.id_num == DORM and all(
                         itm in location.items for itm in ["laptop charger", "lucky mug", "usb drive"]):
-                    print("YOU WIN")
+                    print("YOU WIN!!!")
+                    print("With all your items recovered," +
+                          " you rush back to your dorm and submit the project just in time.")
+                    print(f"Final Score: {game.score}")
+                    print(f"moves taken: {game.moves}")
                     game.ongoing = False
 
         if game.moves == MAX_MOVE:  # Runs out of moves (Game Over)
             game.ongoing = False
             print("GAME OVER")
+            print("Time's up — the deadline has passed, and the project was not submitted.")
+            print(f"Final Score: {game.score}")
+            print(f"moves taken: {game.moves}")
