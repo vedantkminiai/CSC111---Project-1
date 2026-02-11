@@ -108,12 +108,11 @@ if __name__ == "__main__":
     # When you are ready to check your work with python_ta, uncomment the following lines.
     # (Delete the "#" and space before each line.)
     # IMPORTANT: keep this code indented inside the "if __name__ == '__main__'" block
-    import python_ta
-
-    python_ta.check_all(config={
-        'max-line-length': 120,
-        'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
-    })
+    # import python_ta
+    # python_ta.check_all(config={
+    #     'max-line-length': 120,
+    #     'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
+    # })
 
     #  a walkthrough of commands needed to win the game
     win_walkthrough = ["go east", "go south", "take usb drive", "go north", "go east", "go east", "take lucky mug",
@@ -151,5 +150,4 @@ if __name__ == "__main__":
     enhancement1_demo = ["go east", "go north", "undo", "go north", "take toonie", "undo", "take toonie"]
     expected_log = [1, 4, 4, 3, 3, 3]
     sim = AdventureGameSimulation('game_data.json', 1, enhancement1_demo)
-    print(sim.get_id_log())
     assert expected_log == sim.get_id_log()
