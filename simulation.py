@@ -83,7 +83,6 @@ class AdventureGameSimulation:
         Get back a list of all location IDs in the order that they are visited within a game simulation
         that follows the given commands.
         """
-        # Note: We have completed this method for you. Do NOT modify it for A1.
 
         return self._events.get_id_log()
 
@@ -91,9 +90,8 @@ class AdventureGameSimulation:
         """
         Run the game simulation and log location descriptions.
         """
-        # Note: We have completed this method for you. Do NOT modify it for A1.
 
-        current_event = self._events.first  # Start from the first event in the list
+        current_event = self._events.first
 
         while current_event:
             print(current_event.description)
