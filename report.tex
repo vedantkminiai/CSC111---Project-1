@@ -19,22 +19,30 @@ We should be able to run your game by simply running \texttt{adventure.py}. If y
 Example game map below (edit it to show your actual game map):
 
 \begin{verbatim}
-  1  2  3
- -1  4 -1
- -1  5 -1
+-1   2  -1  -1
+-1   3   6  -1
+ 1   4   7   8
+-1   5  -1  -1
 \end{verbatim}
 
 Starting location is: 1
 
+IMPORTANT NOTE: there is no "go north" from location 7 to 6 in our game data.
 \section*{Game solution}
-List of commands:
+List of commands: ["go east", "go south", "take usb drive", "go north", "go east", "go east", "take lucky mug","go west", "go west", "go north", "go east", "take laptop charger", "go west", "go south","go west", "deposit usb drive", "deposit laptop charger","deposit lucky mug"]
 
 \section*{Lose condition(s)}
-Description of how to lose the game:
+Description of how to lose the game: 
 
-List of commands:
+The player loses the game if they run out of moves. The game ends immediately when the player reaches the maximum number of allowed moves (20) without successfully returning all required items to the dorm.
 
-Which parts of your code are involved in this functionality:
+List of commands: 
+
+["go east", "go south", "go north", "go east", "go east", "go west", "go west", "go north", "go north","go south", "go east", "go west", "go south", "go south", "go north", "go west", "go east", "go west","go east", "go west"]
+
+Which parts of your code are involved in this functionality: 
+
+The lose condition is implemented using the moves attribute in the AdventureGame class, which tracks how many actions the player has taken and is updated throughout gameplay. The value of moves is incremented whenever the player performs an action that costs a move, such as moving between locations, taking or depositing an item, and is compared against a fixed maximum defined by $MAX\_MOVE = 20$. At the end of each iteration of the main game loop, the program checks whether the move limit has been reached and ends the game with a loss if so.
 
 % Copy-paste the above if you have multiple lose conditions and describe each possible way to lose the game
 
@@ -47,21 +55,27 @@ Which parts of your code are involved in this functionality:
 \begin{enumerate}
     \item For Item 1:
     \begin{itemize}
-    \item Item name:
-    \item Item start location ID:
-    \item Item target location ID:
+    \item Item name: usb drive
+    \item Item start location ID: 5
+    \item Item target location ID: 1
     \end{itemize}
-        \item For Item 2:
+        \item For Item 2: 
     \begin{itemize}
-    \item Item name:
-    \item Item start location ID:
-    \item Item target location ID:
+    \item Item name: laptop charger
+    \item Item start location ID: 6
+    \item Item target location ID: 1
     \end{itemize}
         \item For Item 3:
     \begin{itemize}
-    \item Item name:
-    \item Item start location ID:
-    \item Item target location ID:
+    \item Item name: lucky mug
+    \item Item start location ID: 8
+    \item Item target location ID: 1
+    \end{itemize}
+        \item For Item 4:
+    \begin{itemize}
+    \item Item name: toonie
+    \item Item start location ID: 3
+    \item Item target location ID: 2
     \end{itemize}
     % Copy-paste the above if you have more items, to list ALL items
 \end{enumerate}
