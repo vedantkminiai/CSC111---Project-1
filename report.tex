@@ -31,20 +31,20 @@ Starting location is: 1
 IMPORTANT NOTE: There is a empty space because there is no path that goes from location 7 to 6 and 6 to 7 in the game data so we added a barrier to separate the two location.
 
 \section*{Game solution}
-List of commands: 
+List of commands:
 
 ["go east", "go south", "take usb drive", "go north", "go east", "go east", "take lucky mug","go west", "go west", "go north", "go east", "take laptop charger", "go west", "go south","go west", "deposit usb drive", "deposit laptop charger","deposit lucky mug"]
 
 \section*{Lose condition(s)}
-Description of how to lose the game: 
+Description of how to lose the game:
 
 The player loses the game if they run out of moves. The game ends immediately when the player reaches the maximum number of allowed moves (20) without successfully returning all required items to the dorm.
 
-List of commands: 
+List of commands:
 
 ["go east", "go south", "go north", "go east", "go east", "go west", "go west", "go north", "go north","go south", "go east", "go west", "go south", "go south", "go north", "go west", "go east", "go west","go east", "go west"]
 
-Which parts of your code are involved in this functionality: 
+Which parts of your code are involved in this functionality:
 
 The lose condition is implemented using the moves attribute in the AdventureGame class, which tracks how many actions the player has taken and is updated throughout gameplay. The value of moves is incremented whenever the player performs an action that costs a move, such as moving between locations, taking or depositing an item, and is compared against a fixed maximum defined by $MAX\_MOVE = 20$. At the end of each iteration of the main game loop, the program checks whether the move limit has been reached and ends the game with a loss if so.
 
@@ -63,7 +63,7 @@ The lose condition is implemented using the moves attribute in the AdventureGame
     \item Item start location ID: 5
     \item Item target location ID: 1
     \end{itemize}
-        \item For Item 2: 
+        \item For Item 2:
     \begin{itemize}
     \item Item name: laptop charger
     \item Item start location ID: 6
@@ -88,10 +88,10 @@ The lose condition is implemented using the moves attribute in the AdventureGame
 
     \begin{enumerate}
         To pick up an item, the player must type "take" followed by the item’s name, such as "take usb drive", "take laptop charger", or "take lucky mug".
-        
+
         To use or drop an item, the player must type "deposit" followed by the item’s name, such as "deposit usb drive", "deposit laptop charger", or "deposit lucky mug", and the deposit must occur at the item’s designated target location.
     \end{enumerate}
-    
+
     \item Which parts of your code (file, class, function/method) are involved in handling the \texttt{inventory} command:
 
     \begin{enumerate}
@@ -109,7 +109,7 @@ The lose condition is implemented using the moves attribute in the AdventureGame
     \end{enumerate}
 
     \item Copy the list you assigned to \texttt{scores\_demo} in the \texttt{simulation.py} file into this section of the report:
-    
+
     \begin{enumerate}
         ["go east", "go south", "take usb drive", "go north", "go west", "deposit usb drive"]
     \end{enumerate}
@@ -132,13 +132,13 @@ The lose condition is implemented using the moves attribute in the AdventureGame
         \end{itemize}
         \item Complexity level (choose from low/medium/high):   Medium
         \item Reasons you believe this is the complexity level (e.g., mention implementation details, how much code did you have to add/change from the baseline, what challenges did you face, etc.)
-        
+
         \begin{itemize}
             This enhancement required modifying multiple parts of the program but did not require a completely new game system. It builds on the existing event log structure to determine the most recent action and introduces helper methods to reverse movement and item actions. The main challenge was ensuring consistency across inventory, score, move count, and event history, while also preventing undo from affecting menu commands. Since it reuses some existing structures, it keeps it at a medium level of complexity.
         \end{itemize}
-        
+
         \item Name the parts of the code which are involved in this enhancement
-        
+
         \begin{itemize}
             AdventureGame.undo\_action
             \newline
@@ -146,13 +146,13 @@ The lose condition is implemented using the moves attribute in the AdventureGame
             \newline
             AdventureGame.\_undo\_deposit\_item
         \end{itemize}
-            
+
         \item Copy the list you assigned to \texttt{enhancements\_demo} in the \texttt{simulation.py} file into this section of the report:
 
         \begin{itemize}
             ["go east", "go north", "undo", "go north", "take toonie", "undo", "take toonie"] \newline\newline\newline\newline\newline
         \end{itemize}
-        
+
     \end{itemize}
 
     \item Describe your enhancement #2 here
@@ -181,11 +181,11 @@ The lose condition is implemented using the moves attribute in the AdventureGame
         \end{itemize}
         \item Copy the list you assigned to \texttt{enhancements\_demo} in the \texttt{simulation.py} file into this section of the report:
         \begin{itemize}
-            ["go east", "go north", "take toonie"] 
+            ["go east", "go north", "take toonie"]
             \newline Notes for the puzzle:
             \newline
             After entering the "take toonie" command the hangman puzzle will appear and the words the player has to solve is either "printer", "bookshelf", or "file" (Each location has a different word list) by entering one letter at a time.
-            \newline 
+            \newline
             For example for the word 'file' the letter you have to input are ['f', 'i', 'l', 'e']
         \end{itemize}
     \end{itemize}
