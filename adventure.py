@@ -260,83 +260,97 @@ class AdventureGame:
         return False
 
     @staticmethod
-    def generate_word(location: Location):
+    def generate_word(puzzle_location: Location) -> str:
         """Generate a word related to the location given for the simple puzzle game.
         Randomly selects a word from the specified locations puzzle word list.
 
             Preconditions:
             - location.puzzle_words != []
         """
-        words = location.puzzle_words
+        words = puzzle_location.puzzle_words
         hangman = random.choice(words)
         return hangman
 
-    # updates word after guessing a letter
     @staticmethod
-    def update_word(new_hangman) -> str:
+    def update_word(new_hangman: list[str]) -> str:
         """Converts list of characters back into a string after user guesses a letter
         """
-        word_hidden = ""
-        for i in new_hangman:
-            word_hidden += i
-        return word_hidden
+        return "".join(new_hangman)
 
-    # main
-    def puzzle(self, location: Location) -> bool:
+    @staticmethod
+    def _get_valid_guess(updated_word: str) -> Optional[str]:
+        """Prompt the user until they enter a single alphabetic character.
+        """
+        guess = ""
+        while True:
+            guess = input(f"(Guess) Enter a letter in word {updated_word}: ")
+            if len(guess) != 1:
+                print("Please enter 1 letter")
+            elif not guess.isalpha():
+                print("Please enter a letter")
+            else:
+                break
+        return guess
+
+    @staticmethod
+    def _apply_guess(chosen_word: str, new_hangman: list[str], guess: str) -> bool:
+        """Apply a guess to the hangman word.
+        Returns True if the letter was already guessed.
+        """
+        already = False
+        for i in range(len(chosen_word)):
+            if chosen_word[i] == guess and new_hangman[i] == guess:
+                already = True
+            elif chosen_word[i] == guess:
+                new_hangman[i] = guess
+        return already
+
+    def puzzle(self, puzzle_location: Location) -> bool:
         """Hangman puzzle game, the puzzle-solver guesses one letter a time to decode the puzzle word.
         The puzzle-solver has 10 tries to fully decode the puzzle before failing.
         If they've surpasssed 10 tries, then the option to retry is available.
         Required for players to obtain special required items.
         """
-        y = True  # Boolean variable controlling the loop for the game
+
+        retry = True
+
         while True:
-            if not y:
+            if not retry:
                 try_again = input("Would you like to try again? Enter y or n: ")
                 if try_again == "y":
-                    y = True
+                    retry = True
                     print()
                 elif try_again == "n":
                     print("Puzzle Over")
                     return False
                 else:
                     print("Invalid input")
-            chosen_word = self.generate_word(location)
-            new_hangman = []
-            for i in chosen_word:
-                new_hangman.append("*")
+                    continue
+
+            chosen_word = self.generate_word(puzzle_location)
+            new_hangman = ["*"] * len(chosen_word)
             tries = 0
-            while y:
+
+            while retry:
                 updated_word = self.update_word(new_hangman)
-                # Asks the user for a guess and checks if the guess is valid
-                while True:
-                    check = True
-                    guess = input(f"(Guess) Enter a letter in word {updated_word}: ")
-                    if len(guess) > 1:
-                        print("Please enter 1 letter")
-                        check = False
-                    if not guess.isalpha():
-                        print("Please enter a letter")
-                        check = False
-                    if check:
-                        break
+                guess = self._get_valid_guess(updated_word)
                 tries += 1
-                already = False  # Checks and reveals if the letter is in word
-                for i in range(len(chosen_word)):
-                    if chosen_word[i] == guess and new_hangman[i] == guess:
-                        already = True
-                        tries -= 1
-                    if chosen_word[i] == guess:
-                        new_hangman[i] = guess  # Outputs if the letter was already entered
+
+                already = self._apply_guess(chosen_word, new_hangman, guess)
                 if already:
                     print(f"    {guess} is already in the word")
-                x = "*" in new_hangman  # If the user runs out of attempts before guessing the word fully
-                if tries >= 10 and x:
-                    print(f"You have failed the puzzle, the word was {chosen_word}\n")
-                    y = False  # If the user guesses the word fully, outputs how many guesses it took
-                if not x:
-                    print(f"You've completed the puzzle! The word is {chosen_word}. You missed {tries} time(s)\n")
-                    y = False
+                    tries -= 1
+
+                if "*" not in new_hangman:
+                    print(
+                        f"You've completed the puzzle! The word is {chosen_word}. "
+                        f"You missed {tries} time(s)\n"
+                    )
                     return True
+
+                if tries >= 10:
+                    print(f"You have failed the puzzle, the word was {chosen_word}\n")
+                    retry = False
         return False
 
 
