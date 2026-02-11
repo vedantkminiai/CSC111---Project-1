@@ -83,7 +83,6 @@ class EventList:
         The given command is the command which was used to reach this new event, or None if this is the first
         event in the game.
         """
-        # Hint: You should update the previous node's <next_command> as needed
 
         if command is None:
             self.first = event
@@ -99,7 +98,6 @@ class EventList:
         Remove the last event from this event list.
         If the list is empty, do nothing.
         """
-        # Hint: The <next_command> and <next> attributes for the new last event should be updated as needed
 
         if self.is_empty():
             return
