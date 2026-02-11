@@ -114,6 +114,8 @@ if __name__ == "__main__":
     #     'disable': ['R1705', 'E9998', 'E9999', 'static_type_checker']
     # })
 
+    DORM = 1
+
     #  a walkthrough of commands needed to win the game
     win_walkthrough = ["go east", "go south", "take usb drive", "go north", "go east", "go east", "take lucky mug",
                        "go west", "go west", "go north", "go east", "take laptop charger", "go west", "go south",
@@ -121,7 +123,7 @@ if __name__ == "__main__":
                        "deposit lucky mug"]  # a list of all the commands needed to walk through the game to win it
     expected_log = [1, 4, 5, 5, 4, 7, 8, 8, 7, 4, 3, 6, 6, 3, 4, 1, 1, 1,
                     1]  # the IDs of all locations that would be visited
-    sim = AdventureGameSimulation('game_data.json', 1, win_walkthrough)
+    sim = AdventureGameSimulation('game_data.json', DORM, win_walkthrough)
     assert expected_log == sim.get_id_log()
 
     #  a walkthrough of commands needed to win the game
@@ -130,30 +132,30 @@ if __name__ == "__main__":
                  "go east", "go west"]
     expected_log = [1, 4, 5, 4, 7, 8, 7, 4, 3, 2, 3, 6, 3, 4, 5, 4, 1, 4, 1, 4,
                     1]  # the IDs of all locations that would be visited
-    sim = AdventureGameSimulation('game_data.json', 1, lose_demo)
+    sim = AdventureGameSimulation('game_data.json', DORM, lose_demo)
     assert expected_log == sim.get_id_log()
 
     #  walkthroughs that show off the "inventory" command
     inventory_demo = ["go east", "go south", "take usb drive", "inventory", "go north", "go west", "deposit usb drive",
                       "inventory"]
     expected_log = [1, 4, 5, 5, 5, 4, 1, 1, 1]
-    sim = AdventureGameSimulation('game_data.json', 1, inventory_demo)
+    sim = AdventureGameSimulation('game_data.json', DORM, inventory_demo)
     assert expected_log == sim.get_id_log()
 
     #  walkthroughs that show off the "score" command
     scores_demo = ["go east", "go south", "take usb drive", "go north", "go west", "deposit usb drive"]
     expected_log = [1, 4, 5, 5, 4, 1, 1]
-    sim = AdventureGameSimulation('game_data.json', 1, scores_demo)
+    sim = AdventureGameSimulation('game_data.json', DORM, scores_demo)
     assert expected_log == sim.get_id_log()
 
     # undo command demo
     enhancement1_demo = ["go east", "go north", "undo", "go north", "take toonie", "undo", "take toonie"]
     expected_log = [1, 4, 4, 3, 3, 3]
-    sim = AdventureGameSimulation('game_data.json', 1, enhancement1_demo)
+    sim = AdventureGameSimulation('game_data.json', DORM, enhancement1_demo)
     assert expected_log == sim.get_id_log()
 
     # hanghang puzzle demo (only shows up when using the take command)
     enhancement2_demo = ["go east", "go north", "take toonie"]
     expected_log = [1, 4, 3, 3, 2, 2]
-    sim = AdventureGameSimulation('game_data.json', 1, enhancement2_demo)
+    sim = AdventureGameSimulation('game_data.json', DORM, enhancement2_demo)
     assert expected_log == sim.get_id_log()
