@@ -158,10 +158,36 @@ The lose condition is implemented using the moves attribute in the AdventureGame
     \item Describe your enhancement #2 here
     \begin{itemize}
         \item Basic description of what the enhancement is:
-        \item Complexity level (low/medium/high):
+
+        \begin{itemize}
+            Some locations in the game contain a hangman-style word puzzle (stored in that location’s puzzle\_words list). If the player tries to take an item at one of these puzzle locations, the game first starts the hangman puzzle and the player must guess the hidden word one letter at a time within 10 tries. If the player solves the puzzle, they are allowed to take the item; if they fail, they cannot take the item (and they may choose to retry or quit the puzzle)
+        \end{itemize}
+        \item Complexity level (low/medium/high): Medium
         \item Reasons you believe this is the complexity level (e.g., mention implementation details)
+        \begin{itemize}
+            This enhancement adds a mini hangman game with its own loop and input validation, including random word selection from a list, tracking guesses, limiting tries, and checking for success or failure. It required multiple helper functions and modifying the take command so that the puzzle runs automatically when the player attempts to take an item at a puzzle location.
+        \end{itemize}
         \item Name the parts of the code which are involved in this enhancement
+        \begin{itemize}
+            AdventureGame.puzzle
+            \newline
+            AdventureGame.generate\_word
+            \newline
+            AdventureGame.\_get\_valid\_guess
+            \newline
+            AdventureGame.\_apply\_guess
+            \newline
+            AdventureGame.update\_word
+        \end{itemize}
         \item Copy the list you assigned to \texttt{enhancements\_demo} in the \texttt{simulation.py} file into this section of the report:
+        \begin{itemize}
+            ["go east", "go north", "take toonie"] 
+            \newline Notes for the puzzle:
+            \newline
+            After entering the "take toonie" command the hangman puzzle will appear and the words the player has to solve is either "printer", "bookshelf", or "file" (Each location has a different word list) by entering one letter at a time.
+            \newline 
+            For example for the word 'file' the letter you have to input are ['f', 'i', 'l', 'e']
+        \end{itemize}
     \end{itemize}
 \end{enumerate}
 
