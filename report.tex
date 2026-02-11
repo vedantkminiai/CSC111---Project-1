@@ -21,15 +21,19 @@ Example game map below (edit it to show your actual game map):
 \begin{verbatim}
 -1   2  -1  -1
 -1   3   6  -1
+-1      -1  -1
  1   4   7   8
 -1   5  -1  -1
 \end{verbatim}
 
 Starting location is: 1
 
-IMPORTANT NOTE: there is no "go north" from location 7 to 6 in our game data.
+IMPORTANT NOTE: There is a empty space because there is no path that goes from location 7 to 6 and 6 to 7 in the game data so we added a barrier to separate the two location.
+
 \section*{Game solution}
-List of commands: ["go east", "go south", "take usb drive", "go north", "go east", "go east", "take lucky mug","go west", "go west", "go north", "go east", "take laptop charger", "go west", "go south","go west", "deposit usb drive", "deposit laptop charger","deposit lucky mug"]
+List of commands: 
+
+["go east", "go south", "take usb drive", "go north", "go east", "go east", "take lucky mug","go west", "go west", "go north", "go east", "take laptop charger", "go west", "go south","go west", "deposit usb drive", "deposit laptop charger","deposit lucky mug"]
 
 \section*{Lose condition(s)}
 Description of how to lose the game: 
@@ -81,7 +85,18 @@ The lose condition is implemented using the moves attribute in the AdventureGame
 \end{enumerate}
 
     \item Exact command(s) that should be used to pick up an item (choose any one or more items for this example), and the command(s) used to use/drop the item (can copy the list you assigned to \texttt{inventory\_demo} in the \texttt{simulation.py} file)
+
+    \begin{enumerate}
+        To pick up an item, the player must type "take" followed by the item’s name, such as "take usb drive", "take laptop charger", or "take lucky mug".
+        
+        To use or drop an item, the player must type "deposit" followed by the item’s name, such as "deposit usb drive", "deposit laptop charger", or "deposit lucky mug", and the deposit must occur at the item’s designated target location.
+    \end{enumerate}
+    
     \item Which parts of your code (file, class, function/method) are involved in handling the \texttt{inventory} command:
+
+    \begin{enumerate}
+        The player’s items are stored in the inventory attribute of the AdventureGame class. The inventory command is processed in the main game loop (inside the if choice in menu block), where the code iterates through game.inventory and prints each item’s name.
+    \end{enumerate}
 \end{enumerate}
 
 \section*{Score}
@@ -89,11 +104,21 @@ The lose condition is implemented using the moves attribute in the AdventureGame
 
     \item Briefly describe the way players can earn score in your game. Include the first location in which they can increase their score, and the exact list of command(s) leading up to the score increase:
 
+    \begin{enumerate}
+        Players earn score by depositing items at their correct target location using the command deposit "item name", which adds that item’s target\_points to game.score. The first location where the player can increase their score is Location 1 (Dorm), because the player can bring back an important item like the usb drive and deposit it there for points.
+    \end{enumerate}
 
     \item Copy the list you assigned to \texttt{scores\_demo} in the \texttt{simulation.py} file into this section of the report:
-
+    
+    \begin{enumerate}
+        ["go east", "go south", "take usb drive", "go north", "go west", "deposit usb drive"]
+    \end{enumerate}
 
     \item Which parts of your code (file, class, function/method) are involved in handling the \texttt{score} functionality:
+
+    \begin{enumerate}
+        Score functionality is handled in AdventureGame class, mainly through the score attribute and the deposit\_item method (which checks the target location and increases self.score by itm.target\_points). The score is displayed to the player in the main game loop under the menu command score, where it prints game.score
+    \end{enumerate}
 \end{enumerate}
 
 \section*{Enhancements}
@@ -101,10 +126,33 @@ The lose condition is implemented using the moves attribute in the AdventureGame
     \item Describe your enhancement \#1 here
     \begin{itemize}
         \item Brief description of what the enhancement is (if it's a puzzle, also describe what steps the player must take to solve it):
-        \item Complexity level (choose from low/medium/high):
+
+        \begin{itemize}
+            The game includes an undo command that allows the player to undo the most recent non-menu action, such as moving between locations, taking an item, or depositing an item. When an undo is successful, the game restores the previous location or item state, updates the inventory and location item lists if needed, reverses score changes for deposits, decreases the move count, and removes the most recent event from the event log. The player is limited to a fixed number of undo attempts (undo\_chances = 3), and undo does nothing if the most recent action was a menu command like look, inventory, score, or log.
+        \end{itemize}
+        \item Complexity level (choose from low/medium/high):   Medium
         \item Reasons you believe this is the complexity level (e.g., mention implementation details, how much code did you have to add/change from the baseline, what challenges did you face, etc.)
+        
+        \begin{itemize}
+            This enhancement required modifying multiple parts of the program but did not require a completely new game system. It builds on the existing event log structure to determine the most recent action and introduces helper methods to reverse movement and item actions. The main challenge was ensuring consistency across inventory, score, move count, and event history, while also preventing undo from affecting menu commands. Since it reuses some existing structures, it keeps it at a medium level of complexity.
+        \end{itemize}
+        
         \item Name the parts of the code which are involved in this enhancement
+        
+        \begin{itemize}
+            AdventureGame.undo\_action
+            \newline
+            AdventureGame.\_undo\_take\_item
+            \newline
+            AdventureGame.\_undo\_deposit\_item
+        \end{itemize}
+            
         \item Copy the list you assigned to \texttt{enhancements\_demo} in the \texttt{simulation.py} file into this section of the report:
+
+        \begin{itemize}
+            ["go east", "go north", "undo", "go north", "take toonie", "undo", "take toonie"]
+        \end{itemize}
+        
     \end{itemize}
 
     % Uncomment below section if you have more enhancements; copy-paste as needed
