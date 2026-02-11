@@ -148,13 +148,13 @@ if __name__ == "__main__":
     sim = AdventureGameSimulation('game_data.json', DORM, scores_demo)
     assert expected_log == sim.get_id_log()
 
-    # undo command demo
+    # undo command demo - enhancement
     enhancement1_demo = ["go east", "go north", "undo", "go north", "take toonie", "undo", "take toonie"]
     expected_log = [1, 4, 4, 3, 3, 3]
     sim = AdventureGameSimulation('game_data.json', DORM, enhancement1_demo)
     assert expected_log == sim.get_id_log()
 
-    # hanghang puzzle demo (only shows up when using the take command)
+    # hanghang puzzle demo (only shows up when using the take command) - enhancement
     enhancement2_demo = ["go east", "go north", "take toonie"]
     expected_log = [1, 4, 3, 3, 2, 2]
     sim = AdventureGameSimulation('game_data.json', DORM, enhancement2_demo)
