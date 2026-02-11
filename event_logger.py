@@ -121,8 +121,6 @@ class EventList:
             curr = curr.next
         return location_so_far
 
-    # Note: You may add other methods to this class as needed
-
 
 if __name__ == "__main__":
     pass
