@@ -26,9 +26,6 @@ from game_entities import Location, Item
 from event_logger import Event, EventList
 
 
-# Note: You may add in other import statements here as needed
-
-# Note: You may add helper functions, classes, etc. below as needed
 class AdventureGame:
     """A text adventure game class storing all location, item and map data.
 
@@ -71,21 +68,12 @@ class AdventureGame:
         - game_data_file is the filename of a valid game data JSON file
         """
 
-        # NOTES:
-        # You may add parameters/attributes/methods to this class as you see fit.
-
-        # Requirements:
-        # 1. Make sure the Location class is used to represent each location.
-        # 2. Make sure the Item class is used to represent each item.
-
-        # Suggested helper method (you can remove and load these differently if you wish to do so):
         self._locations, self._items = self._load_game_data(game_data_file)
         self.inventory = []
         self.score = 0
         self.moves = 0
-        # Suggested attributes (you can remove and track these differently if you wish to do so):
-        self.current_location_id = initial_location_id  # game begins at this location
-        self.ongoing = True  # whether the game is ongoing
+        self.current_location_id = initial_location_id
+        self.ongoing = True
 
     @staticmethod
     def _load_game_data(filename: str) -> tuple[dict[int, Location], list[Item]]:
@@ -369,15 +357,12 @@ if __name__ == "__main__":
     MAX_MOVE = 20  # Max amount of move the player can move
     undo_chances = 3  # Max amount of undo chance the player has
 
-    game_log = EventList()  # This is REQUIRED as one of the baseline requirements
-    game = AdventureGame('game_data.json', DORM)  # load data, setting initial location ID to 1
-    menu = ["look", "inventory", "score", "log", "quit", "undo"]  # Regular menu options available at each location
+    game_log = EventList()
+    game = AdventureGame('game_data.json', DORM)  # load data, setting initial location ID to DORM
+    menu = ["look", "inventory", "score", "log", "quit", "undo"]  # menu options available at each location
     choice = None
 
-    # Note: You may modify the code below as needed; the following starter code is just a suggestion
     while game.ongoing:
-        # Note: If the loop body is getting too long, you should split the body up into helper functions
-        # for better organization. Part of your mark will be based on how well-organized your code is.
 
         location = game.get_location()
 
