@@ -132,7 +132,7 @@
       "description": "A small USB drive containing the only copy of your project. Losing this would be a disaster.",
       "start_position": 5,
       "target_position": 1,
-      "target_points": 10,
+      "target_points": 30,
       "deposited": false
     },
     {
@@ -140,7 +140,7 @@
       "description": "Your laptop charger. Without it, your battery won't last long enough to submit the project.",
       "start_position": 6,
       "target_position": 1,
-      "target_points": 10,
+      "target_points": 20,
       "deposited": false
     },
     {
@@ -148,7 +148,7 @@
       "description": "Your lucky U of T mug. It's been with you through every late-night study session and all-nighter.",
       "start_position": 8,
       "target_position": 1,
-      "target_points": 10,
+      "target_points": 25,
       "deposited": false
     },
     {
@@ -156,7 +156,7 @@
       "description": "A toonie lying on the ground. It looks recently dropped and still shiny.",
       "start_position": 3,
       "target_position": 2,
-      "target_points": 5,
+      "target_points": 100,
       "deposited": false
     }
   ]
